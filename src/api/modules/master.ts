@@ -51,3 +51,12 @@ export const updateGroupStatus = (params: Master.UpdateGroupStatusRequest) => {
 export const publishGroup = (params: Master.PublishGroupRequest) => {
 	return http.post(PORT1 + `/groupPurchase/setPublicState`, params);
 };
+
+/**
+ * 请求团购详情
+ * @param params
+ * @returns
+ */
+export const requestGroupDetail = (params: any) => {
+	return http.get(PORT1 + "/groupPurchase/groupDetail", params);
+};

@@ -1,84 +1,173 @@
+<script setup lang="ts" name="marketplaceComponent">
+import { marketplaceGroupPageList } from "@/api/modules/master";
+import { ref, watch } from "vue";
+import dayjs from "dayjs";
+
+const page = ref(1);
+const dataSource = ref<any[]>([]);
+const total = ref(0);
+
+watch(
+	page,
+	() => {
+		marketplaceGroupPageList({ pageNum: page.value, pageSize: 20 } as any).then((res: any) => {
+			dataSource.value = res.data?.content || [];
+			total.value = res.total || 0;
+		});
+	},
+	{ immediate: true }
+);
+const srcList = [
+	"https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
+	"https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg",
+	"https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
+	"https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg",
+	"https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg",
+	"https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg",
+	"https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg"
+];
+</script>
+
 <template>
-	<div>
-		<div class="table-box">
-			<ProTable
-				ref="proTable"
-				:columns="columns"
-				:requestApi="marketplaceGroupPageList"
-				:initParam="initParam"
-				:dataCallback="dataCallback"
+	<div class="table-box">
+		<div :style="{ overflow: 'auto', margin: '-8px' }">
+			<div
+				:style="{
+					display: 'flex',
+					flexWrap: 'wrap',
+					justifyContent: 'space-between',
+					maxWidth: '1200px',
+					overflow: 'visible',
+					padding: '8px'
+				}"
 			>
-				<!-- 表格操作 -->
-				<template #operation="scope">
-					<el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-				</template>
-			</ProTable>
-			<GroupDrawer ref="drawerRef" />
-			<ImportExcel ref="dialogRef" />
+				<div v-for="item of dataSource" :key="item.id" :class="Classes['item-wrapper']">
+					<div :class="Classes['item-title']">
+						<!-- <el-tag :class="Classes['item-title-tag']" effect="plain" size="small">已隐藏</el-tag> -->
+						<span>{{ item.name || "-" }}</span>
+					</div>
+					<div :class="Classes['item-time']">
+						<span>起止时间：{{ dayjs(item.ctime * 1000).format("YYYY-MM-DD") }}</span>
+						--
+						<span>{{ dayjs(item.endTime * 1000).format("YYYY-MM-DD") }}</span>
+					</div>
+					<div :class="Classes['item-images']">
+						<el-image
+							v-for="(img, index) of srcList.slice(0, 3)"
+							:key="img"
+							:class="Classes['item-image']"
+							:preview-src-list="srcList"
+							:initial-index="index"
+							:src="img"
+						/>
+					</div>
+					<div :class="Classes['item-operate']">
+						<div :class="Classes['item-operate-status']">{{ item.statusName }}</div>
+						<div :class="Classes['item-operate-btns']">
+							<el-button :class="Classes.btn" size="small" @click="$router.push({ name: 'Detail', params: { gid: item.id } })"
+								>详情</el-button
+							>
+							<el-button :class="Classes.btn" size="small">参团</el-button>
+						</div>
+					</div>
+					<el-divider :style="{ margin: '12px 0' }" />
+					<div :class="Classes['item-descriptions']">
+						<div :class="Classes['item-description']">
+							<span :class="Classes['item-description-label']">实际收入</span
+							><span :class="Classes['item-description-value']">￥0.00</span>
+						</div>
+						<div :class="Classes['item-description']">
+							<span :class="Classes['item-description-label']">退款金额</span
+							><span :class="Classes['item-description-value']">￥0</span>
+						</div>
+					</div>
+					<div :class="Classes['item-descriptions']">
+						<div :class="Classes['item-description']">
+							<span :class="Classes['item-description-label']">已跟团</span
+							><span :class="Classes['item-description-value']">0人/次</span>
+						</div>
+						<div :class="Classes['item-description']">
+							<span :class="Classes['item-description-label']">取消跟团</span
+							><span :class="Classes['item-description-value']">0人/次</span>
+						</div>
+						<div :class="Classes['item-description']">
+							<span :class="Classes['item-description-label']">查看</span
+							><span :class="Classes['item-description-value']">0人</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div :style="{ position: 'sticky', bottom: '-22px', textAlign: 'right', background: '#fff', marginRight: '-16px' }">
+			<el-pagination layout="prev, pager, next" :total="total" @current-change="(p: number) => (page = p)" />
 		</div>
 	</div>
 </template>
 
-<script setup lang="tsx" name="marketplaceComponent">
-import { ref, reactive } from "vue";
-import { Master } from "@/api/interface/index";
-import { ColumnProps } from "@/components/ProTable/interface";
-import ProTable from "@/components/ProTable/index.vue";
-import ImportExcel from "@/components/ImportExcel/index.vue";
-import GroupDrawer from "@/views/master/GroupDrawer.vue";
-import { View } from "@element-plus/icons-vue";
-import { marketplaceGroupPageList } from "@/api/modules/master";
-
-// 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
-const proTable = ref();
-// 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
-const initParam = reactive({});
-
-// dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 datalist && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
-const dataCallback = (data: any) => {
-	return {
-		datalist: data.content,
-		total: data.total,
-		pageNum: data.pageNum,
-		pageSize: data.pageSize
-	};
-};
-
-// 表格配置项
-const columns: Partial<ColumnProps>[] = [
-	{ type: "selection", width: 80, fixed: "left" },
-	{ type: "index", label: "#", width: 80 },
-	{ prop: "name", label: "团购名称", width: 220 },
-	{ prop: "statusName", label: "状态", width: 80 },
-	{ prop: "formatStartTime", label: "开始时间", width: 170 },
-	{ prop: "formatEndTime", label: "结束时间", width: 170 },
-	{ prop: "publicFlag", label: "是否已发布", width: 100 },
-	{ prop: "operation", label: "操作", width: 320, fixed: "right" }
-];
-
-// 批量添加用户
-interface DialogExpose {
-	acceptParams: (params: any) => void;
+<style module="Classes">
+.item-wrapper {
+	display: inline-block;
+	width: 30%;
+	padding: 8px;
+	margin-bottom: 16px;
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 1px 0 8px -1px rgb(0 0 0.5);
 }
-const dialogRef = ref<DialogExpose>();
-
-// 打开 drawer(新增、查看、编辑)
-interface GroupDrawerProps {
-	acceptParams: (params: any) => void;
+.item-title {
+	font-size: 18px;
+	font-weight: 500;
+	color: #000000;
 }
-const drawerRef = ref<GroupDrawerProps>();
-const openDrawer = (title: string, rowData: Partial<Master.CustomizeCreateRequest> = { name: "" }) => {
-	let params = {
-		title,
-		rowData: { ...rowData },
-		isView: title === "查看",
-		getTableList: proTable.value.refresh
-	};
-	drawerRef.value!.acceptParams(params);
-};
-</script>
-<style scoped>
-.dialog-footer button:first-child {
+.item-title-tag {
+	margin-right: 6px;
+	color: gray;
+	vertical-align: middle;
+	border-color: gray;
+}
+.item-time {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+.item-time > span {
+	font-size: 12px;
+}
+.item-images {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.item-image {
+	flex: 1;
+	height: 100px;
+	margin-right: 4px;
+}
+.item-operate {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 10px;
+	font-size: 14px;
+}
+.item-operate-status {
+	flex: 1;
+	color: #ff0000;
+}
+.item-operate-btns > .btn:nth-child(2) {
+	background-color: lightgray;
+	border: none;
+}
+.item-operate-btns > .btn:nth-child(1) {
+	color: gray;
+	border-color: gray;
+}
+.item-description {
+	display: inline-block;
 	margin-right: 10px;
+	font-size: 12px;
+	color: gray;
+}
+.item-description-value {
+	margin-left: 6px;
 }
 </style>

@@ -2,7 +2,7 @@
 	"code": 200,
 	"data": [
 		{
-			"icon": "home-filled",
+			"icon": "tickets",
 			"title": "我发起的",
 			"path": "/home",
 			"children": [
@@ -14,7 +14,7 @@
 			]
 		},
 		{
-			"icon": "home-filled",
+			"icon": "data-analysis",
 			"title": "团购市场",
 			"path": "/marketplace",
 			"children": [

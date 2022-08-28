@@ -24,16 +24,49 @@ const masterRouter: Array<RouteRecordRaw> = [
 				}
 			},
 			{
-				path: "/master/embedded",
-				name: "embedded",
-				component: () => import("@/views/dashboard/embedded/index.vue"),
+				path: "/home/create",
+				name: "Create",
+				component: () => import("@/views/master/CreateGroup.vue"),
 				meta: {
 					keepAlive: true,
-					requiresAuth: true,
-					title: "内嵌页面",
-					key: "embedded"
+					requiresAuth: false,
+					title: "创建团购",
+					key: "Create"
+				}
+			},
+			{
+				path: "/home/create/:gid",
+				name: "Edit",
+				component: () => import("@/views/master/CreateGroup.vue"),
+				meta: {
+					keepAlive: true,
+					requiresAuth: false,
+					title: "编辑团购",
+					key: "Edit"
+				}
+			},
+			{
+				path: "/home/detail/:gid",
+				name: "Detail",
+				component: () => import("@/views/master/CreateGroup.vue"),
+				meta: {
+					keepAlive: true,
+					requiresAuth: false,
+					title: "团购详情",
+					key: "Detail"
 				}
 			}
+			// {
+			// 	path: "/home/embedded",
+			// 	name: "embedded",
+			// 	component: () => import("@/views/dashboard/embedded/index.vue"),
+			// 	meta: {
+			// 		keepAlive: true,
+			// 		requiresAuth: false,
+			// 		title: "内嵌页面",
+			// 		key: "embedded"
+			// 	}
+			// }
 		]
 	}
 ];

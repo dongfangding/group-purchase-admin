@@ -49,21 +49,23 @@
 						批量删除用户
 					</el-button>
 				</template>
+				<template #publicFlag="scope">
+					{{ scope.publicFlag ? "已发布" : "未发布" }}
+				</template>
 				<!-- 表格操作 -->
 				<template #operation="scope">
-					<el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
-					<el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-					<el-button type="primary" link :icon="Refresh" @click="openUpdateStatusDialog(scope.row)">状态变更</el-button>
-					<el-button type="primary" link :icon="Delete" @click="publishGroupFn(scope.row)">发布</el-button>
+					<el-button type="primary" link @click="$router.push({ name: 'Detail', params: { gid: scope.row.id } })">查看</el-button>
+					<el-button type="primary" link @click="$router.push({ name: 'Edit', params: { gid: scope.row.id } })">编辑</el-button>
+					<el-button type="primary" link @click="openUpdateStatusDialog(scope.row)">变更状态</el-button>
+					<el-button type="primary" link @click="publishGroupFn(scope.row)">发布</el-button>
 				</template>
 			</ProTable>
-			<GroupDrawer ref="drawerRef" />
 			<ImportExcel ref="dialogRef" />
 		</div>
 	</div>
 </template>
 
-<script setup lang="tsx" name="useComponent">
+<script setup lang="ts" name="useComponent">
 import { ref, reactive } from "vue";
 import { Master } from "@/api/interface/index";
 import { groupStatus } from "@/utils/serviceDict";
@@ -72,14 +74,13 @@ import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/components/ImportExcel/index.vue";
-import GroupDrawer from "@/views/master/GroupDrawer.vue";
-import { CirclePlus, Delete, EditPen, DocumentCopy, View, Refresh } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, DocumentCopy } from "@element-plus/icons-vue";
 import { deleteUser } from "@/api/modules/user";
 import {
 	myInitiatedGroup,
 	createFromWxJieLong,
-	customizeCreate,
-	modifyGroupInfo,
+	// customizeCreate,
+	// modifyGroupInfo,
 	updateGroupStatus,
 	publishGroup
 } from "@/api/modules/master";
@@ -115,10 +116,10 @@ const { BUTTONS } = useAuthButtons();
 const columns: Partial<ColumnProps>[] = [
 	{ type: "selection", width: 80, fixed: "left" },
 	{ type: "index", label: "#", width: 80 },
-	{ prop: "name", label: "团购名称", width: 220 },
+	{ prop: "name", label: "团购名称" },
 	{ prop: "statusName", label: "状态", width: 80 },
-	{ prop: "formatStartTime", label: "开始时间", width: 170 },
-	{ prop: "formatEndTime", label: "结束时间", width: 170 },
+	{ prop: "formatStartTime", label: "开始时间", width: 180 },
+	{ prop: "formatEndTime", label: "结束时间", width: 180 },
 	{ prop: "publicFlag", label: "是否已发布", width: 100 },
 	{ prop: "operation", label: "操作", width: 320, fixed: "right" }
 ];
@@ -165,20 +166,20 @@ interface DialogExpose {
 const dialogRef = ref<DialogExpose>();
 
 // 打开 drawer(新增、查看、编辑)
-interface GroupDrawerProps {
-	acceptParams: (params: any) => void;
-}
-const drawerRef = ref<GroupDrawerProps>();
-const openDrawer = (title: string, rowData: Partial<Master.CustomizeCreateRequest> = { name: "" }) => {
-	let params = {
-		title,
-		rowData: { ...rowData },
-		isView: title === "查看",
-		apiUrl: title === "新增" ? customizeCreate : title === "编辑" ? modifyGroupInfo : "",
-		getTableList: proTable.value.refresh
-	};
-	drawerRef.value!.acceptParams(params);
-};
+// interface GroupDrawerProps {
+// 	acceptParams: (params: any) => void;
+// }
+// const drawerRef = ref<GroupDrawerProps>();
+// const openDrawer = (title: string, rowData: Partial<Master.CustomizeCreateRequest> = { name: "" }) => {
+// 	let params = {
+// 		title,
+// 		rowData: { ...rowData },
+// 		isView: title === "查看",
+// 		apiUrl: title === "新增" ? customizeCreate : title === "编辑" ? modifyGroupInfo : "",
+// 		getTableList: proTable.value.refresh
+// 	};
+// 	drawerRef.value!.acceptParams(params);
+// };
 </script>
 <style scoped>
 .dialog-footer button:first-child {

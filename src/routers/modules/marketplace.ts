@@ -13,7 +13,7 @@ const marketplaceRouter: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: "/marketplace/index",
-				name: "index",
+				name: "marketplace",
 				component: () => import("@/views/marketplace/index.vue"),
 				meta: {
 					keepAlive: true,

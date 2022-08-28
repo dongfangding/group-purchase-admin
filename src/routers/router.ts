@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 // * 导入所有router
 const metaRouters = import.meta.globEager("./modules/*.ts");
@@ -26,7 +26,7 @@ Object.keys(metaRouters).forEach(item => {
 const routes: RouteRecordRaw[] = [
 	{
 		path: "/",
-		redirect: { name: "login" }
+		redirect: "/home"
 	},
 	{
 		path: "/login",
@@ -47,7 +47,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-	history: createWebHashHistory(),
+	history: createWebHistory(),
 	routes,
 	strict: false,
 	// 切换页面，滚动到最顶部

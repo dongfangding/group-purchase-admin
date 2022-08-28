@@ -4,16 +4,17 @@ import { Layout } from "@/routers/constant";
 // 我发起的 模块
 const masterRouter: Array<RouteRecordRaw> = [
 	{
-		path: "/master",
+		path: "/home",
 		component: Layout,
-		redirect: "/master/index",
+		name: "home",
+		redirect: "/home/index",
 		meta: {
 			title: "我发起的"
 		},
 		children: [
 			{
-				path: "/master/index",
-				name: "index",
+				path: "/home/index",
+				name: "master",
 				component: () => import("@/views/master/index.vue"),
 				meta: {
 					keepAlive: true,

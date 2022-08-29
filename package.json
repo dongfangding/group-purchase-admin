@@ -1,8 +1,8 @@
 {
-	"name": "geeker-admin",
+	"name": "group-purchase-admin",
 	"private": true,
 	"version": "0.0.5",
-	"description": "Geeker-Admin后台管理系统",
+	"description": "团购吧",
 	"author": "SpicyBoy <848130454@qq.com>",
 	"scripts": {
 		"dev": "vite",

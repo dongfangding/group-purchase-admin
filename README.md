@@ -1,62 +1,12 @@
-# Vue 3.2 + TypeScript + Pinia + Vite2 + Element-Plus 管理系统（开源啦 🎉🎉）
 
-![banner](https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/md/banner.png)
+团购吧(group-purchase-manage)前端界面
 
-### 前言 📖
-
-Geeker Admin，基于 Vue3.2、TypeScript、Vite2、Pinia、Element-Plus 开源的一套后台管理模板，目前利用空余时间开发 🕒🕒。项目中很多样式都是借鉴其它的管理系统，但代码是完全自己编写的，整个项目还有很多地方不完善，后期会持续更新（项目文档），希望大家能多提意见。
-
-### ？为什么开发这个管理系统 🤷‍♂️
-
-- 主要是学习下 Vue3.2 + TypeScript
-- 目前看了很多 Vue3 的开源后台管理系统，感觉都非常庞大，很多功能基本上也用不到，所以自己就尝试写了一下这个管理系统（适合自己的才是最好的 🤣）
-
-### 项目相关文档 📚
-
-- 项目更新日志：[CHANGELOG.md](./CHANGELOG.md)
-
-- 代码规范文档：[STANDARD.md](./STANDARD.md)
-
-### 一、在线预览 👀
-
-- Link：https://geeker-admin.vercel.app
-
-### 二、Git 仓库地址 (欢迎 Star⭐)
+### 源仓库地址
 
 - Gitee：https://gitee.com/laramie/Geeker-Admin
 - GitHub：https://github.com/HalseySpicy/Geeker-Admin
 
-### 三、🔥🔥🔥 React18 最新版本已完成 🎉 欢迎 Star
-
-- Gitee：https://gitee.com/laramie/Hooks-Admin
-- GitHub：https://github.com/HalseySpicy/Hooks-Admin
-
-### 四、🔨🔨🔨 项目功能
-
-- 🚀 使用 Vue3.2 开发，单文件组件 `＜script setup＞`
-- 🚀 采用 Vite2 作为项目开发、打包工具（配置了 Gzip 打包、TSX 语法、跨域代理、打包预览工具……）
-- 🚀 整个项目集成了 TypeScript （完全是为了想学习 🤣）
-- 🚀 使用 Pinia🍍 替代 Vuex，轻量、简单、易用（香啊~🤤 集成了持久化插件）
-- 🚀 使用 TypeScript 对 Axios 整个二次封装 （全局错误拦截、常用请求封装、全局请求 Loading、取消重复请求……）
-- 🚀 对表格的所有操作基本都封装成了 Hooks （表格数据搜索、重置、查询、分页、多选、单条数据操作、文件上传、下载、格式化单元格内容……）
-- 🚀 基于 Element 二次封装 [Pro-Table 组件](https://juejin.cn/post/7094890833064755208) ，表格页面全部传成配置项 Columns
-- 🚀 支持 Element 组件大小切换、暗黑模式、i18n 国际化（i18n 暂时没配置所有文件，根据项目自行配置）
-- 🚀 使用 vue-router 进行路由权限拦截（403 页面）、页面按钮权限配置、路由懒加载
-- 🚀 使用 keep-alive 对整个页面进行缓存，支持多级嵌套页面（缓存路由里可配置、页面切换带动画）
-- 🚀 常用自定义指令开发（复制、水印、拖拽、节流、防抖、长按……）
-- 🚀 使用 Prettier 统一格式化代码，集成 Eslint、Stylelint 代码校验规范（STANDARD.md 文件）
-- 🚀 使用 husky、lint-staged、commitlint、commitizen、cz-git 规范提交信息（STANDARD.md 文件）
-
-### 五、安装使用步骤 📔
-
-- **Clone：**
-
-```text
-# Gitee
-git clone https://gitee.com/laramie/Geeker-Admin.git
-# GitHub
-git clone https://github.com/HalseySpicy/Geeker-Admin.git
-```
+### 安装使用步骤 📔
 
 - **Install：**
 
@@ -111,31 +61,7 @@ lint:stylelint
 npm run commit
 ```
 
-### 六、项目截图 📷
-
-#### 1、登录页：
-
-![login-light](https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/md/login-light.png)
-
-![login-dark](https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/md/login-dark.png)
-
-#### 2、首页：
-
-![home_light](https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/md/home_light.png)
-
-![home-dark](https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220602145003.png)
-
-#### 3、表格页：
-
-![table_light](https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/md/table_light.png)
-
-![table-dark](https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220602145016.png)
-
-#### 4、数据大屏：
-
-![dataScreen02](https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220602170253.png)
-
-### 七、文件资源目录 📚
+### 文件资源目录 📚
 
 ```text
 Geeker-Admin
@@ -196,29 +122,4 @@ Geeker-Admin
 | :-----------------------------------------------------------------------: | :-----------------------------------------------------------------------------: | :---------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
 |                              last 2 versions                              |                                 last 2 versions                                 |                                last 2 versions                                |                                last 2 versions                                |
 
-### 九、项目后台接口 🧩
 
-> 项目后台接口完全采用 Mock 数据，感谢以下 Mock 平台支持
-
-- FastMock： https://www.fastmock.site/
-- EasyMock：https://mock.mengxuegu.com/
-
-### 十、微信交流群
-
-> **😀 微信群超过 200 人了，请加我好友，我拉大家进群**
-
-|                                                      微信二维码                                                       |
-| :-------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220610141657.png" alt="Wechat QRcode" width=170> |
-
-### 十一、捐赠 🍵
-
-> **如果你正在使用这个项目或者喜欢这个项目的，可以通过以下方式支持我**
-
-- **Star、Fork、Watch** 一键三连 🚀🚀
-
-- 通过 **微信、支付宝** 一次性捐款，够维护访问地址就行 🤣🤣
-
-|                                                         微信                                                          |                                                        支付宝                                                         |
-| :-------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220610144145.png" alt="Wechat QRcode" width=170> | <img src="https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220610144200.png" alt="Alipay QRcode" width=170> |

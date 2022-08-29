@@ -11,7 +11,7 @@
 		>
 			<el-form-item label="用户头像" prop="avatar">
 				<UploadImg
-					v-model:imageUrl="drawerData.rowData!.avatar"
+					v-model:file="drawerData.rowData!.avatar"
 					:disabled="drawerData.isView"
 					:upload-style="{ width: '120px', height: '120px' }"
 					@check-validate="checkValidate('avatar')"

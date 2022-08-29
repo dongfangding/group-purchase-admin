@@ -36,7 +36,7 @@
 			>
 				<!-- 表格 header 按钮 -->
 				<template #tableHeader="scope">
-					<el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">创建团购</el-button>
+					<el-button type="primary" :icon="CirclePlus">创建团购</el-button>
 					<el-button type="primary" :icon="DocumentCopy" @click="importDialogVisible = true">导入微信接龙文案</el-button>
 					<el-button
 						type="danger"
@@ -164,22 +164,6 @@ interface DialogExpose {
 	acceptParams: (params: any) => void;
 }
 const dialogRef = ref<DialogExpose>();
-
-// 打开 drawer(新增、查看、编辑)
-// interface GroupDrawerProps {
-// 	acceptParams: (params: any) => void;
-// }
-// const drawerRef = ref<GroupDrawerProps>();
-// const openDrawer = (title: string, rowData: Partial<Master.CustomizeCreateRequest> = { name: "" }) => {
-// 	let params = {
-// 		title,
-// 		rowData: { ...rowData },
-// 		isView: title === "查看",
-// 		apiUrl: title === "新增" ? customizeCreate : title === "编辑" ? modifyGroupInfo : "",
-// 		getTableList: proTable.value.refresh
-// 	};
-// 	drawerRef.value!.acceptParams(params);
-// };
 </script>
 <style scoped>
 .dialog-footer button:first-child {

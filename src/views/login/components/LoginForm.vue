@@ -14,11 +14,6 @@
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item prop="loginType">
-			<el-select v-model="loginForm.loginType" placeholder="请选择登录方式" clearable>
-				<el-option v-for="item in loginType" :key="item.value" :label="item.label" :value="item.value" />
-			</el-select>
-		</el-form-item>
 	</el-form>
 	<div class="login-btn">
 		<el-button :icon="CircleClose" round @click="resetForm(loginFormRef)" size="large">重置</el-button>
@@ -39,7 +34,6 @@ import { loginApi } from "@/api/modules/login";
 import { GlobalStore } from "@/store";
 import { MenuStore } from "@/store/modules/menu";
 import { TabsStore } from "@/store/modules/tabs";
-import { loginType } from "@/utils/serviceDict";
 // import md5 from "js-md5";
 
 const globalStore = GlobalStore();
@@ -74,7 +68,7 @@ const login = (formEl: FormInstance | undefined) => {
 			const requestLoginForm: Login.ReqLoginForm = {
 				loginIdentity: loginForm.loginIdentity,
 				credential: loginForm.credential,
-				loginType: loginForm.loginType,
+				loginType: "PASSWORD",
 				uuid: loginForm.credential
 				// credential: md5(loginForm.password)
 			};

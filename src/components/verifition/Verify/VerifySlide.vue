@@ -65,7 +65,6 @@ import { aesEncrypt } from "./../utils/ase";
 import { resetSize } from "./../utils/util";
 import { reqGet, reqCheck } from "./../api/index";
 import { computed, onMounted, reactive, ref, watch, nextTick, toRefs, getCurrentInstance } from "vue";
-//  "captchaType":"blockPuzzle",
 export default {
 	name: "VerifySlide",
 	props: {
@@ -118,13 +117,13 @@ export default {
 		}
 	},
 	setup(props) {
-		const { mode, captchaType, type, blockSize, explain } = toRefs(props);
+		const { mode, type, blockSize, explain } = toRefs(props);
 		const { proxy } = getCurrentInstance();
 		let secretKey = ref(""), //后端返回的ase加密秘钥
+			uuid = ref(""), // 跟随验证码一起返回的绑定的uuid
 			passFlag = ref(""), //是否通过的标识
 			backImgBase = ref(""), //验证码背景图片
 			blockBackImgBase = ref(""), //验证滑块的背景图片
-			backToken = ref(""), //后端返回的唯一token值
 			startMoveTime = ref(""), //移动开始的时间
 			endMovetime = ref(""), //移动结束的时间
 			tipsBackColor = ref(""), //提示词的背景颜色
@@ -264,13 +263,13 @@ export default {
 				moveLeftDistance = (moveLeftDistance * 310) / parseInt(setSize.imgWidth);
 				let data = {
 					captchaType: "PIC_SLIDE",
-					pointJson: secretKey.value
+					verifyCode: secretKey.value
 						? aesEncrypt(JSON.stringify({ x: moveLeftDistance, y: 5.0 }), secretKey.value)
 						: JSON.stringify({ x: moveLeftDistance, y: 5.0 }),
-					token: backToken.value
+					uuid: uuid.value
 				};
 				reqCheck(data).then(res => {
-					if (res.repCode == "0000") {
+					if (res.data.code == 200) {
 						moveBlockBackgroundColor.value = "#5cb85c";
 						leftBarBorderColor.value = "#5cb85c";
 						iconColor.value = "#fff";
@@ -286,12 +285,17 @@ export default {
 						passFlag.value = true;
 						tipWords.value = `${((endMovetime.value - startMoveTime.value) / 1000).toFixed(2)}s验证成功`;
 						let captchaVerification = secretKey.value
-							? aesEncrypt(backToken.value + "---" + JSON.stringify({ x: moveLeftDistance, y: 5.0 }), secretKey.value)
-							: backToken.value + "---" + JSON.stringify({ x: moveLeftDistance, y: 5.0 });
+							? aesEncrypt(uuid.value + "---" + JSON.stringify({ x: moveLeftDistance, y: 5.0 }), secretKey.value)
+							: uuid.value + "---" + JSON.stringify({ x: moveLeftDistance, y: 5.0 });
 						setTimeout(() => {
 							tipWords.value = "";
 							proxy.$parent.closeBox();
-							proxy.$parent.$emit("success", { captchaVerification });
+							proxy.$parent.$emit("success", {
+								uuid: uuid.value,
+								verifyCode: data.verifyCode,
+								captchaType: "PIC_SLIDE",
+								captchaVerification: captchaVerification
+							});
 						}, 1000);
 					} else {
 						moveBlockBackgroundColor.value = "#d9534f";
@@ -340,13 +344,13 @@ export default {
 		// 请求背景图片和验证图片
 		function getPictrue() {
 			let data = {
-				captchaType: captchaType.value
+				captchaType: "PIC_SLIDE"
 			};
 			reqGet(data).then(res => {
-				if (res.repCode == "0000") {
-					backImgBase.value = res.repData.originalImageBase64;
+				if (res.code == 200) {
+					backImgBase.value = res.data.originalImageBase64;
+					uuid.value = res.data.uuid;
 					blockBackImgBase.value = res.repData.jigsawImageBase64;
-					backToken.value = res.repData.token;
 					secretKey.value = res.repData.secretKey;
 				} else {
 					tipWords.value = res.repMsg;
@@ -358,7 +362,6 @@ export default {
 			passFlag, //是否通过的标识
 			backImgBase, //验证码背景图片
 			blockBackImgBase, //验证滑块的背景图片
-			backToken, //后端返回的唯一token值
 			startMoveTime, //移动开始的时间
 			endMovetime, //移动结束的时间
 			tipsBackColor, //提示词的背景颜色

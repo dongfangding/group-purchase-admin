@@ -152,9 +152,11 @@ export namespace Master {
  * 通用模块
  */
 export namespace Common {
+	// 获取验证码请求
 	export interface VerifyCodeReq {
 		captchaType: string; // 验证码类型TEXT 文本， MATH计算 CLICK_WORDS点选文字，PIC_SLIDE滑动图片
 	}
+	// 获取验证码响应
 	export interface VerifyCodeRes {
 		width: number;
 		height: number;
@@ -163,5 +165,17 @@ export namespace Common {
 		wordList: Array<string>;
 		uuid: string;
 		prefix: string;
+	}
+	// 验证码校验参数
+	export interface CaptchaVerifyRequest {
+		uuid: string;
+		verifyCode: string;
+		captchaType: string;
+		captchaVerification: string; // 后台二次校验参数
+	}
+	// 发送短信验证码
+	export interface SendSmsCodeRequest {
+		mobile: string;
+		captchaVerifyRequest: CaptchaVerifyRequest;
 	}
 }

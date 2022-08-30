@@ -102,16 +102,16 @@ export default {
 		}
 	},
 	setup(props) {
-		const { mode, captchaType } = toRefs(props);
+		const { mode } = toRefs(props);
 		const { proxy } = getCurrentInstance();
 		let secretKey = ref(""), //后端返回的ase加密秘钥
+			uuid = ref(""), // 跟随验证码一起返回的绑定的uuid
 			checkNum = ref(3), //默认需要点击的字数
 			fontPos = reactive([]), //选中的坐标信息
 			checkPosArr = reactive([]), //用户点击的坐标
 			num = ref(1), //点击的记数
 			pointBackImgBase = ref(""), //后端获取到的背景图片
 			poinTextList = reactive([]), //后端返回的点击字体顺序
-			backToken = ref(""), //后端返回的token值
 			setSize = reactive({
 				imgHeight: 0,
 				imgWidth: 0,
@@ -161,15 +161,15 @@ export default {
 					// var flag = this.comparePos(this.fontPos, this.checkPosArr);
 					//发送后端请求
 					let captchaVerification = secretKey.value
-						? aesEncrypt(backToken.value + "---" + JSON.stringify(checkPosArr), secretKey.value)
-						: backToken.value + "---" + JSON.stringify(checkPosArr);
+						? aesEncrypt(uuid.value + "---" + JSON.stringify(checkPosArr), secretKey.value)
+						: uuid.value + "---" + JSON.stringify(checkPosArr);
 					let data = {
 						captchaType: "CLICK_WORDS",
-						pointJson: secretKey.value ? aesEncrypt(JSON.stringify(checkPosArr), secretKey.value) : JSON.stringify(checkPosArr),
-						token: backToken.value
+						verifyCode: secretKey.value ? aesEncrypt(JSON.stringify(checkPosArr), secretKey.value) : JSON.stringify(checkPosArr),
+						uuid: uuid.value
 					};
 					reqCheck(data).then(res => {
-						if (res.repCode == "0000") {
+						if (res.code == 200) {
 							barAreaColor.value = "#4cae4c";
 							barAreaBorderColor.value = "#5cb85c";
 							text.value = "验证成功";
@@ -180,7 +180,12 @@ export default {
 									refresh();
 								}, 1500);
 							}
-							proxy.$parent.$emit("success", { captchaVerification });
+							proxy.$parent.$emit("success", {
+								uuid: uuid.value,
+								verifyCode: data.verifyCode,
+								captchaType: "CLICK_WORDS",
+								captchaVerification: captchaVerification
+							});
 						} else {
 							proxy.$parent.$emit("error", proxy);
 							barAreaColor.value = "#d9534f";
@@ -224,14 +229,14 @@ export default {
 		// 请求背景图片和验证图片
 		function getPictrue() {
 			let data = {
-				captchaType: captchaType.value
+				captchaType: "CLICK_WORDS"
 			};
 			reqGet(data).then(res => {
-				if (res.repCode == "0000") {
-					pointBackImgBase.value = res.repData.originalImageBase64;
-					backToken.value = res.repData.token;
-					secretKey.value = res.repData.secretKey;
-					poinTextList.value = res.repData.wordList;
+				if (res.code == 200) {
+					pointBackImgBase.value = res.data.originalImageBase64;
+					secretKey.value = res.data.secretKey;
+					uuid.value = res.data.uuid;
+					poinTextList.value = res.data.wordList;
 					text.value = "请依次点击【" + poinTextList.value.join(",") + "】";
 				} else {
 					text.value = res.repMsg;
@@ -255,7 +260,6 @@ export default {
 			num,
 			pointBackImgBase,
 			poinTextList,
-			backToken,
 			setSize,
 			tempPoints,
 			text,

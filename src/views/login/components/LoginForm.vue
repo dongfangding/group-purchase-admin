@@ -41,9 +41,9 @@
 	</div>
 	<div>
 		<Verify
-			@success="success"
-			:mode="pop"
-			:captchaType="blockPuzzle"
+			@success="verifySuccess"
+			mode="pop"
+			captchaType="clickWord"
 			:imgSize="{ width: '330px', height: '155px' }"
 			ref="verifyDialog"
 		></Verify>
@@ -53,11 +53,11 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { Login } from "@/api/interface";
+import { Login, Common } from "@/api/interface";
 import { CircleClose, UserFilled } from "@element-plus/icons-vue";
 import type { ElForm } from "element-plus";
 import { ElMessage } from "element-plus";
-import { loginApi } from "@/api/modules/login";
+import { loginApi, sendSmsCode } from "@/api/modules/login";
 import { GlobalStore } from "@/store";
 import { MenuStore } from "@/store/modules/menu";
 import { TabsStore } from "@/store/modules/tabs";
@@ -89,6 +89,21 @@ const openVerify = () => {
 	verifyDialog.value.show();
 };
 
+// 验证码成功回调事件， 发送验证码
+const verifySuccess = (params: any) => {
+	console.log(params.captchaVerification);
+	const smsRequest: Common.SendSmsCodeRequest = {
+		mobile: loginForm.loginIdentity,
+		captchaVerifyRequest: {
+			uuid: params.uuid,
+			verifyCode: params.verifyCode,
+			captchaType: params.captchaType,
+			captchaVerification: params.captchaVerification
+		}
+	};
+	sendSmsCode(smsRequest);
+};
+
 // 定义 formRef（校验规则）
 type FormInstance = InstanceType<typeof ElForm>;
 const loginFormRef = ref<FormInstance>();
@@ -108,7 +123,7 @@ const loginForm = reactive<Login.ReqLoginForm>({
 const loading = ref<boolean>(false);
 const router = useRouter();
 
-// 确认导入微信接龙文案
+// 发送短信验证码，打开验证码组件
 const getAuthCode = async () => {
 	if (loginForm.loginIdentity === "") {
 		ElMessage.error("请先填写手机号");

@@ -116,7 +116,6 @@ export default {
 			}
 		};
 		watchEffect(() => {
-			alert(captchaType.value);
 			switch (captchaType.value) {
 				case "blockPuzzle":
 					verifyType.value = "2";

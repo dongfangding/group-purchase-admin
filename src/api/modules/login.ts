@@ -54,5 +54,10 @@ export const getMenuList = () => {
 
 // 获取验证码
 export const getVerifyCode = (params: Common.VerifyCodeReq) => {
-	return http.post<Common.VerifyCodeRes>(PORT1 + `/common/generateCaptcha` + params); // 正常 post json 请求  ==>  application/json
+	return http.post<Common.VerifyCodeRes>(PORT1 + `/common/generateCaptcha`, params);
+};
+
+// 发送短信验证码
+export const sendSmsCode = (params: Common.SendSmsCodeRequest) => {
+	return http.post<Common.VerifyCodeRes>(PORT1 + `/common/sendSmsCode`, params);
 };

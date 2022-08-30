@@ -1,4 +1,4 @@
-import { Login } from "@/api/interface/index";
+import { Login, Common } from "@/api/interface/index";
 import { PORT1 } from "@/api/config/servicePort";
 import Menu from "@/assets/json/menu.json";
 import qs from "qs";
@@ -50,4 +50,9 @@ export const getMenuList = () => {
 	// return http.get<Menu.MenuOptions[]>(PORT1 + `/menu/list`);
 	// 如果想让菜单变为本地数据，注释上一行代码，并引入本地 Menu.json 数据
 	return Menu;
+};
+
+// 获取验证码
+export const getVerifyCode = (params: Common.VerifyCodeReq) => {
+	return http.post<Common.VerifyCodeRes>(PORT1 + `/common/generateCaptcha` + params); // 正常 post json 请求  ==>  application/json
 };

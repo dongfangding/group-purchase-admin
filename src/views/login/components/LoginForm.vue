@@ -1,25 +1,52 @@
 <template>
 	<el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" size="large">
-		<el-form-item prop="loginIdentity">
-			<el-input v-model="loginForm.loginIdentity" placeholder="用户名：admin / user">
+		<el-form-item prop="loginIdentity" v-if="props.loginType === 'PASSWORD'">
+			<el-input v-model="loginForm.loginIdentity" placeholder="请输入用户名">
 				<template #prefix>
 					<el-icon class="el-input__icon"><user /></el-icon>
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item prop="credential">
-			<el-input type="password" v-model="loginForm.credential" placeholder="密码123456" show-password autocomplete="new-password">
+		<el-form-item prop="credential" v-if="props.loginType === 'PASSWORD'">
+			<el-input type="password" v-model="loginForm.credential" placeholder="请输入密码" show-password autocomplete="new-password">
 				<template #prefix>
 					<el-icon class="el-input__icon"><lock /></el-icon>
 				</template>
 			</el-input>
 		</el-form-item>
+		<el-form-item prop="loginIdentity" v-if="props.loginType === 'SMS_CODE'">
+			<el-input v-model="loginForm.loginIdentity" placeholder="请输入手机号">
+				<template #prefix>
+					<el-icon class="el-input__icon"><user /></el-icon>
+				</template>
+			</el-input>
+		</el-form-item>
+		<div :style="{ display: 'flex' }" v-if="props.loginType === 'SMS_CODE'">
+			<el-form-item prop="credential" :style="{ width: '55%', flex: 1 }">
+				<el-input type="text" v-model="loginForm.credential" placeholder="输入验证码" oninput="value=value.replace(/[^\d]/g,'')">
+				</el-input>
+			</el-form-item>
+			<el-button :style="{ 'margin-left': '2px' }" v-show="sendAuthCode" @click.prevent="getAuthCode">获取验证码</el-button>
+			<span v-show="!sendAuthCode" class="auth_text">
+				<span class="auth_text_blue">{{ auth_time }} </span>
+				秒之后重新发送验证码</span
+			>
+		</div>
 	</el-form>
 	<div class="login-btn">
 		<el-button :icon="CircleClose" round @click="resetForm(loginFormRef)" size="large">重置</el-button>
 		<el-button :icon="UserFilled" round @click="login(loginFormRef)" size="large" type="primary" :loading="loading">
 			登录
 		</el-button>
+	</div>
+	<div>
+		<Verify
+			@success="success"
+			:mode="pop"
+			:captchaType="blockPuzzle"
+			:imgSize="{ width: '330px', height: '155px' }"
+			ref="verifyDialog"
+		></Verify>
 	</div>
 </template>
 
@@ -34,11 +61,33 @@ import { loginApi } from "@/api/modules/login";
 import { GlobalStore } from "@/store";
 import { MenuStore } from "@/store/modules/menu";
 import { TabsStore } from "@/store/modules/tabs";
+//引入组件
+import Verify from "@/components/verifition/Verify.vue";
 // import md5 from "js-md5";
 
 const globalStore = GlobalStore();
 const menuStore = MenuStore();
 const tabStore = TabsStore();
+// 验证码弹出框组件
+const verifyDialog = ref();
+
+// const logining = false;
+const sendAuthCode = true; //显示‘获取按钮'还是'倒计时'
+const auth_time = 0; // 倒计时 计数器
+// const credential = ""; //绑定输入验证码框
+
+// 接收父组件传过来的值
+const props = defineProps({
+	loginType: {
+		type: String,
+		default: () => "mobileLogin"
+	}
+});
+
+// 打开验证码弹框
+const openVerify = () => {
+	verifyDialog.value.show();
+};
 
 // 定义 formRef（校验规则）
 type FormInstance = InstanceType<typeof ElForm>;
@@ -58,6 +107,19 @@ const loginForm = reactive<Login.ReqLoginForm>({
 
 const loading = ref<boolean>(false);
 const router = useRouter();
+
+// 确认导入微信接龙文案
+const getAuthCode = async () => {
+	if (loginForm.loginIdentity === "") {
+		ElMessage.error("请先填写手机号");
+		return;
+	}
+	openVerify();
+	// await createFromWxJieLong({ text: ref(wxText).value });
+	// importDialogVisible.value = false;
+	// proTable.value.refresh();
+};
+
 // login
 const login = (formEl: FormInstance | undefined) => {
 	if (!formEl) return;
@@ -68,7 +130,7 @@ const login = (formEl: FormInstance | undefined) => {
 			const requestLoginForm: Login.ReqLoginForm = {
 				loginIdentity: loginForm.loginIdentity,
 				credential: loginForm.credential,
-				loginType: "PASSWORD",
+				loginType: props.loginType,
 				uuid: loginForm.credential
 				// credential: md5(loginForm.password)
 			};

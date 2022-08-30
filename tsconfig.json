@@ -4,6 +4,7 @@
 		"useDefineForClassFields": true,
 		"module": "esnext",
 		"moduleResolution": "node",
+		"allowJs": true,
 
 		/* Strict Type-Checking Options */
 		"strict": true /* Enable all strict type-checking options. */,

@@ -147,3 +147,21 @@ export namespace Master {
 		groupMasterAvatarUrl: string;
 	}
 }
+
+/**
+ * 通用模块
+ */
+export namespace Common {
+	export interface VerifyCodeReq {
+		captchaType: string; // 验证码类型TEXT 文本， MATH计算 CLICK_WORDS点选文字，PIC_SLIDE滑动图片
+	}
+	export interface VerifyCodeRes {
+		width: number;
+		height: number;
+		originalImageBase64: string;
+		imageBase64: string;
+		wordList: Array<string>;
+		uuid: string;
+		prefix: string;
+	}
+}

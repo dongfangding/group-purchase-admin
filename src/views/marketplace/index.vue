@@ -42,6 +42,23 @@ const srcList = [
 				}"
 			>
 				<div v-for="item of dataSource" :key="item.id" :class="Classes['item-wrapper']">
+					<div :class="Classes['item-group-master']">
+						<div>
+							<el-image :class="Classes['item-group-avatar-image']" :src="item.groupMasterAvatarUrl" />
+						</div>
+						<div :class="Classes['item-group-master-name']">
+							{{ item.groupMasterName }}
+						</div>
+						<div>
+							<div :class="Classes['item-group-join-info']">
+								<span>100人跟团</span>
+							</div>
+							<div :class="Classes['item-group-join-info']">
+								<span>1000人查看</span>
+							</div>
+						</div>
+					</div>
+
 					<div :class="Classes['item-title']">
 						<!-- <el-tag :class="Classes['item-title-tag']" effect="plain" size="small">已隐藏</el-tag> -->
 						<span>{{ item.name || "-" }}</span>
@@ -113,6 +130,24 @@ const srcList = [
 	background-color: white;
 	border-radius: 8px;
 	box-shadow: 1px 0 8px -1px rgb(0 0 0.5);
+}
+.item-group-master {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.item-group-master-name {
+	flex: 1;
+	margin-left: 5px;
+}
+.item-group-avatar-image {
+	flex: 1;
+	height: 50px;
+	margin-right: 4px;
+}
+.item-group-join-info {
+	font-size: 10px;
+	color: gray;
 }
 .item-title {
 	font-size: 18px;

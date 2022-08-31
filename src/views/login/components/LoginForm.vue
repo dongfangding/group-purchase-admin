@@ -91,7 +91,6 @@ const openVerify = () => {
 
 // 验证码成功回调事件， 发送验证码
 const verifySuccess = (params: any) => {
-	console.log(params.captchaVerification);
 	const smsRequest: Common.SendSmsCodeRequest = {
 		mobile: loginForm.loginIdentity,
 		captchaVerifyRequest: {

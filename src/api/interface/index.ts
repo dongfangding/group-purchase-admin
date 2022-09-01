@@ -178,4 +178,8 @@ export namespace Common {
 		mobile: string;
 		captchaVerifyRequest: CaptchaVerifyRequest;
 	}
+	// 发送短信验证码响应
+	export interface ApplicationSmsSendResponse {
+		uuid: string;
+	}
 }

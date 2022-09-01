@@ -70,6 +70,7 @@ const menuStore = MenuStore();
 const tabStore = TabsStore();
 // 验证码弹出框组件
 const verifyDialog = ref();
+const uuid = ref();
 
 // const logining = false;
 const sendAuthCode = true; //显示‘获取按钮'还是'倒计时'
@@ -90,7 +91,7 @@ const openVerify = () => {
 };
 
 // 验证码成功回调事件， 发送验证码
-const verifySuccess = (params: any) => {
+const verifySuccess = async (params: any) => {
 	const smsRequest: Common.SendSmsCodeRequest = {
 		mobile: loginForm.loginIdentity,
 		captchaVerifyRequest: {
@@ -100,7 +101,8 @@ const verifySuccess = (params: any) => {
 			captchaVerification: params.captchaVerification
 		}
 	};
-	sendSmsCode(smsRequest);
+	const res = await sendSmsCode(smsRequest);
+	uuid.value = res.data!.uuid;
 };
 
 // 定义 formRef（校验规则）
@@ -145,7 +147,7 @@ const login = (formEl: FormInstance | undefined) => {
 				loginIdentity: loginForm.loginIdentity,
 				credential: loginForm.credential,
 				loginType: props.loginType,
-				uuid: loginForm.credential
+				uuid: uuid.value
 				// credential: md5(loginForm.password)
 			};
 			const res = await loginApi(requestLoginForm);

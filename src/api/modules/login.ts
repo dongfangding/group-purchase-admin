@@ -59,5 +59,5 @@ export const getVerifyCode = (params: Common.VerifyCodeReq) => {
 
 // 发送短信验证码
 export const sendSmsCode = (params: Common.SendSmsCodeRequest) => {
-	return http.post<Common.VerifyCodeRes>(PORT1 + `/common/sendSmsCode`, params);
+	return http.post<Common.ApplicationSmsSendResponse>(PORT1 + `/common/sendSmsCode`, params);
 };

@@ -60,3 +60,12 @@ export const publishGroup = (params: Master.PublishGroupRequest) => {
 export const requestGroupDetail = (params: any) => {
 	return http.get(PORT1 + "/groupPurchase/groupDetail", params);
 };
+
+/**
+ * 参团操作
+ * @param params
+ * @returns
+ */
+export const requestJoin = (params: any) => {
+	return http.post(PORT1 + `/groupPurchase/join`, params);
+};

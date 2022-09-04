@@ -1,11 +1,15 @@
 <script setup lang="ts" name="marketplaceComponent">
-import { marketplaceGroupPageList } from "@/api/modules/master";
-import { ref, watch } from "vue";
+import { marketplaceGroupPageList, requestJoin } from "@/api/modules/master";
+import { ref, watch, reactive } from "vue";
 import dayjs from "dayjs";
+import { FormInstance, ElMessage } from "element-plus";
 
 const page = ref(1);
 const dataSource = ref<any[]>([]);
 const total = ref(0);
+const dialogVisible = ref(false);
+const currentRecord = ref<any>({});
+const ruleFormRef = ref<FormInstance>();
 
 watch(
 	page,
@@ -17,6 +21,12 @@ watch(
 	},
 	{ immediate: true }
 );
+const ruleForm = reactive({
+	goodNum: 1
+});
+const rules = reactive({
+	goodNum: [{ required: true, message: "请选择团购数量", trigger: "blur" }]
+});
 const srcList = [
 	"https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
 	"https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg",
@@ -26,6 +36,28 @@ const srcList = [
 	"https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg",
 	"https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg"
 ];
+
+const handleJoin = (item: any) => {
+	currentRecord.value = item;
+	dialogVisible.value = true;
+};
+
+const handleConfirm = async () => {
+	console.log("rule", ruleForm.goodNum);
+	await ruleFormRef.value?.validate();
+	await requestJoin({ groupId: currentRecord.value?.id, goodId: currentRecord.value?.goodId, goodNum: ruleForm.goodNum || 0 });
+	ElMessage({
+		message: "参团成功.",
+		type: "success"
+	});
+	dialogVisible.value = false;
+};
+
+watch(dialogVisible, newVal => {
+	if (!newVal) {
+		currentRecord.value = {};
+	}
+});
 </script>
 
 <template>
@@ -84,7 +116,7 @@ const srcList = [
 							<el-button :class="Classes.btn" size="small" @click="$router.push({ name: 'Detail', params: { gid: item.id } })"
 								>详情</el-button
 							>
-							<el-button :class="Classes.btn" size="small">参团</el-button>
+							<el-button :class="Classes.btn" size="small" @click="handleJoin(item)">参团</el-button>
 						</div>
 					</div>
 					<el-divider :style="{ margin: '12px 0' }" />
@@ -119,6 +151,22 @@ const srcList = [
 			<el-pagination layout="prev, pager, next" :total="total" @current-change="(p: number) => (page = p)" />
 		</div>
 	</div>
+	<el-dialog v-model="dialogVisible" :title="currentRecord.name" :width="360">
+		<el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm" status-icon>
+			<el-form-item label="商品名称">
+				<span>{{ currentRecord.goodName }}</span>
+			</el-form-item>
+			<el-form-item label="团购数量" prop="goodNum">
+				<el-input-number v-model="ruleForm.goodNum" :min="1" :max="currentRecord.stock" />
+			</el-form-item>
+		</el-form>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button @click="dialogVisible = false">取消</el-button>
+				<el-button type="primary" @click="handleConfirm">确认</el-button>
+			</span>
+		</template>
+	</el-dialog>
 </template>
 
 <style module="Classes">

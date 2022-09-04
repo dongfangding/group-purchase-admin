@@ -56,6 +56,26 @@ export const getUserGender = () => {
 	return http.get<User.ResGender>(PORT1 + `/user/gender`);
 };
 
+/**
+ * 个人中心
+ * @returns
+ */
 export const personalInfo = () => {
 	return http.get<UserInfo.PersonalInfoResponse>(PORT1 + `/userInfo/personalInfo`);
+};
+
+/**
+ * 完善个人信息
+ * @returns
+ */
+export const completeInfo = (params: UserInfo.PersonalInfoResponse) => {
+	return http.post<UserInfo.PersonalInfoResponse>(PORT1 + `/userInfo/completeInfo`, params);
+};
+
+/**
+ * 单独发送邮箱验证邮件
+ * @returns
+ */
+export const sendEmailVerify = (params: UserInfo.EmailVerifyRequest) => {
+	return http.post(PORT1 + `/userInfo/sendEmailVerify`, params);
 };

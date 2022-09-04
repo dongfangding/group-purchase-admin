@@ -176,6 +176,9 @@ export namespace UserInfo {
 		avatarThumbUrl: string; // 头像地址缩略图
 		ctime: string; // ctime
 	}
+	export interface EmailVerifyRequest {
+		email: string;
+	}
 }
 
 /**

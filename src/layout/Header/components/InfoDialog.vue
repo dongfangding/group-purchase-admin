@@ -11,7 +11,17 @@
 					<el-input v-model="personInfoForm.nickname"> </el-input>
 				</el-form-item>
 				<el-form-item prop="email" label="邮箱">
-					<el-input v-model="personInfoForm.email"> </el-input>
+					<el-row>
+						<el-col :span="12"><el-input v-model="personInfoForm.email"> </el-input></el-col>
+						<el-col :span="8" :style="{ 'margin-left': '5px' }"
+							><el-button
+								@click.prevent="sendEmailVerifyFn"
+								class="email_verify_status"
+								v-if="!personInfoForm.emailVerified && personInfoForm.email"
+								>不可使用，点击重新发送验证邮件</el-button
+							></el-col
+						>
+					</el-row>
 				</el-form-item>
 				<el-form-item prop="communityId" label="小区">
 					<el-input v-model="personInfoForm.communityId"> </el-input>
@@ -35,25 +45,16 @@ import { ref, onMounted } from "vue";
 import { UserInfo } from "@/api/interface";
 import { UserFilled } from "@element-plus/icons-vue";
 import UploadImg from "@/components/UploadImg/index.vue";
-import { personalInfo } from "@/api/modules/user";
+import { personalInfo, completeInfo, sendEmailVerify } from "@/api/modules/user";
 const dialogVisible = ref(false);
 
 // 登录表单数据
-const personInfoForm = ref<UserInfo.PersonalInfoResponse>({} as UserInfo.PersonalInfoResponse);
-// let personInfoForm = reactive<UserInfo.PersonalInfoResponse>({
-// 	communityId: 0,
-// 	buildingNo: "",
-// 	roomNo: "",
-// 	nickname: "",
-// 	avatarUrl: "",
-// 	avatarThumbUrl: "",
-// 	email: ""
-// });
+let personInfoForm = ref<UserInfo.PersonalInfoResponse>({} as UserInfo.PersonalInfoResponse);
 
 onMounted(() => {
 	personalInfo().then(res => {
-		console.log(res);
-		personInfoForm.value = res || {};
+		// 怎么抑制这个缺少属性的错误呢？
+		personInfoForm.value = res.data || {};
 	});
 });
 
@@ -61,11 +62,20 @@ onMounted(() => {
 const openDialog = () => {
 	dialogVisible.value = true;
 };
-const edit = (form: UserInfo.UserInfoForm) => {
-	console.log(form);
+const edit = (form: UserInfo.PersonalInfoResponse) => {
+	completeInfo(form);
+};
+const sendEmailVerifyFn = () => {
+	sendEmailVerify({ email: personInfoForm.value.email });
 };
 
 defineExpose({
 	openDialog
 });
 </script>
+<style scoped lang="scss">
+.email_verify_status {
+	font-size: 12px;
+	color: red;
+}
+</style>

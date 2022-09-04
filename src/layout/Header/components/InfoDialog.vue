@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { UserInfo } from "@/api/interface";
 import { UserFilled } from "@element-plus/icons-vue";
 import UploadImg from "@/components/UploadImg/index.vue";
@@ -39,7 +39,7 @@ import { personalInfo } from "@/api/modules/user";
 const dialogVisible = ref(false);
 
 // 登录表单数据
-const personInfoForm = ref<UserInfo.PersonalInfoResponse>();
+const personInfoForm = ref<any>();
 // let personInfoForm = reactive<UserInfo.PersonalInfoResponse>({
 // 	communityId: 0,
 // 	buildingNo: "",

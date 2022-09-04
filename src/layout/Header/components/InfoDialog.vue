@@ -39,7 +39,7 @@ import { personalInfo } from "@/api/modules/user";
 const dialogVisible = ref(false);
 
 // 登录表单数据
-const personInfoForm = ref<any>();
+const personInfoForm = ref<UserInfo.PersonalInfoResponse>({} as UserInfo.PersonalInfoResponse);
 // let personInfoForm = reactive<UserInfo.PersonalInfoResponse>({
 // 	communityId: 0,
 // 	buildingNo: "",

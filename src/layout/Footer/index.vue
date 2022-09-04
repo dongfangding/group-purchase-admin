@@ -1,7 +1,5 @@
 <template>
-	<div class="footer flx-center">
-		<a href="http://www.spicyboy.cn/" target="_blank"> 2022 © 团购吧 By snoball. </a>
-	</div>
+	<div class="footer flx-center">2022 © 团购吧 By snowball.</div>
 </template>
 
 <style scoped lang="scss">

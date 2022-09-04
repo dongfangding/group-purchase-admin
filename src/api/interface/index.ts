@@ -158,6 +158,24 @@ export namespace UserInfo {
 		avatarThumbUrl: string; // 头像缩略图
 		email: string; // 邮箱
 	}
+	export interface PersonalInfoResponse {
+		id: number;
+		communityId: number;
+		communityName: string;
+		communityAddress: string;
+		buildingNo: string;
+		roomNo: string;
+		nickname: string;
+		mobile: string;
+		wxId: string;
+		wxBusinessCardQrcodeUrl: string; // wxBusinessCardQrcodeUrl
+		wxCollectionMoneyQrcodeUrl: string; // wxCollectionMoneyQrcodeUrl
+		email: string;
+		emailVerified: boolean; // 邮箱是否已验证
+		avatarUrl: string; // 头像地址url
+		avatarThumbUrl: string; // 头像地址缩略图
+		ctime: string; // ctime
+	}
 }
 
 /**

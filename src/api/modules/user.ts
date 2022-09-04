@@ -1,4 +1,4 @@
-import { ResPage, User } from "@/api/interface/index";
+import { ResPage, User, UserInfo } from "@/api/interface/index";
 import { PORT1 } from "@/api/config/servicePort";
 
 import http from "@/api";
@@ -54,4 +54,8 @@ export const getUserStatus = () => {
 // * 获取用户性别字典
 export const getUserGender = () => {
 	return http.get<User.ResGender>(PORT1 + `/user/gender`);
+};
+
+export const personalInfo = () => {
+	return http.get<UserInfo.PersonalInfoResponse>(PORT1 + `/userInfo/personalInfo`);
 };

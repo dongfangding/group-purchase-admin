@@ -47,7 +47,7 @@ export default {
 		captchaType: {
 			type: String,
 			required: true,
-			default: "blockPuzzle"
+			default: "clickWord"
 		},
 		figure: {
 			type: Number
@@ -101,7 +101,6 @@ export default {
 		 * @description 刷新
 		 * */
 		const refresh = () => {
-			console.log(instance.value);
 			if (instance.value.refresh) {
 				instance.value.refresh();
 			}

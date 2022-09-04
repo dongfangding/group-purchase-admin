@@ -29,7 +29,7 @@
 			<el-button :style="{ 'margin-left': '2px' }" v-show="sendAuthCode" @click.prevent="getAuthCode">获取验证码</el-button>
 			<span v-show="!sendAuthCode" class="auth_text">
 				<span class="auth_text_blue">{{ auth_time }} </span>
-				秒之后重新发送验证码</span
+				秒之后重新获取</span
 			>
 		</div>
 	</el-form>
@@ -73,8 +73,8 @@ const verifyDialog = ref();
 const uuid = ref();
 
 // const logining = false;
-const sendAuthCode = true; //显示‘获取按钮'还是'倒计时'
-const auth_time = 0; // 倒计时 计数器
+let sendAuthCode = ref(true); //显示‘获取按钮'还是'倒计时'
+let auth_time = ref(0); // 倒计时 计数器
 // const credential = ""; //绑定输入验证码框
 
 // 接收父组件传过来的值
@@ -103,6 +103,16 @@ const verifySuccess = async (params: any) => {
 	};
 	const res = await sendSmsCode(smsRequest);
 	uuid.value = res.data!.uuid;
+	sendAuthCode.value = false;
+	//设置倒计时秒
+	auth_time.value = 60;
+	const auth_timetimer = setInterval(() => {
+		auth_time.value--;
+		if (auth_time.value <= 0) {
+			sendAuthCode.value = true;
+			clearInterval(auth_timetimer);
+		}
+	}, 1000);
 };
 
 // 定义 formRef（校验规则）

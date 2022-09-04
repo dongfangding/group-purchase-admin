@@ -155,6 +155,7 @@ export default {
 		const barArea = computed(() => {
 			return proxy.$el.querySelector(".verify-bar-area");
 		});
+		const captchaType = ref("PIC_SLIDE");
 		function init() {
 			text.value = explain.value;
 			getPictrue();
@@ -217,7 +218,6 @@ export default {
 				//兼容移动端
 				// let x = e.touches[0].pageX; 注释
 			}
-			console.log(barArea);
 			startLeft.value = Math.floor(x - barArea.value.getBoundingClientRect().left);
 			startMoveTime.value = +new Date(); //开始滑动的时间
 			if (isEnd.value == false) {
@@ -262,7 +262,7 @@ export default {
 				let moveLeftDistance = parseInt((moveBlockLeft.value || "").replace("px", ""));
 				moveLeftDistance = (moveLeftDistance * 310) / parseInt(setSize.imgWidth);
 				let data = {
-					captchaType: "PIC_SLIDE",
+					captchaType: captchaType.value,
 					verifyCode: secretKey.value
 						? aesEncrypt(JSON.stringify({ x: moveLeftDistance, y: 5.0 }), secretKey.value)
 						: JSON.stringify({ x: moveLeftDistance, y: 5.0 }),
@@ -293,7 +293,7 @@ export default {
 							proxy.$parent.$emit("success", {
 								uuid: uuid.value,
 								verifyCode: data.verifyCode,
-								captchaType: "PIC_SLIDE",
+								captchaType: captchaType.value,
 								captchaVerification: captchaVerification
 							});
 						}, 1000);
@@ -344,14 +344,14 @@ export default {
 		// 请求背景图片和验证图片
 		function getPictrue() {
 			let data = {
-				captchaType: "PIC_SLIDE"
+				captchaType: captchaType.value
 			};
 			reqGet(data).then(res => {
 				if (res.code == 200) {
 					backImgBase.value = res.data.originalImageBase64;
 					uuid.value = res.data.uuid;
-					blockBackImgBase.value = res.repData.jigsawImageBase64;
-					secretKey.value = res.repData.secretKey;
+					blockBackImgBase.value = res.data.jigsawImageBase64;
+					secretKey.value = res.data.secretKey;
 				} else {
 					tipWords.value = res.repMsg;
 				}

@@ -74,9 +74,6 @@ export default {
 			type: String,
 			default: "fixed"
 		},
-		captchaType: {
-			type: String
-		},
 		//间隔
 		vSpace: {
 			type: Number,
@@ -148,6 +145,7 @@ export default {
 			};
 		});
 		const canvas = ref(null);
+		const captchaType = ref("CLICK_WORDS");
 		const canvasClick = e => {
 			checkPosArr.push(getMousePos(canvas, e));
 			if (num.value == checkNum.value) {
@@ -164,7 +162,7 @@ export default {
 						? aesEncrypt(uuid.value + "---" + JSON.stringify(checkPosArr), secretKey.value)
 						: uuid.value + "---" + JSON.stringify(checkPosArr);
 					let data = {
-						captchaType: "CLICK_WORDS",
+						captchaType: captchaType.value,
 						verifyCode: secretKey.value ? aesEncrypt(JSON.stringify(checkPosArr), secretKey.value) : JSON.stringify(checkPosArr),
 						uuid: uuid.value
 					};
@@ -183,7 +181,7 @@ export default {
 							proxy.$parent.$emit("success", {
 								uuid: uuid.value,
 								verifyCode: data.verifyCode,
-								captchaType: "CLICK_WORDS",
+								captchaType: captchaType.value,
 								captchaVerification: captchaVerification
 							});
 						} else {
@@ -229,7 +227,7 @@ export default {
 		// 请求背景图片和验证图片
 		function getPictrue() {
 			let data = {
-				captchaType: "CLICK_WORDS"
+				captchaType: captchaType.value
 			};
 			reqGet(data).then(res => {
 				if (res.code == 200) {

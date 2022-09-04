@@ -148,6 +148,18 @@ export namespace Master {
 	}
 }
 
+export namespace UserInfo {
+	export interface UserInfoForm {
+		communityId: number; // 小区id
+		buildingNo: string; // 楼栋号
+		roomNo: string; // 房间号
+		nickname: string; // 昵称
+		avatarUrl: string; // 头像
+		avatarThumbUrl: string; // 头像缩略图
+		email: string; // 邮箱
+	}
+}
+
 /**
  * 通用模块
  */

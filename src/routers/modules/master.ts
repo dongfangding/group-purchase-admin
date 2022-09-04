@@ -48,7 +48,7 @@ const masterRouter: Array<RouteRecordRaw> = [
 			{
 				path: "/home/detail/:gid",
 				name: "Detail",
-				component: () => import("@/views/master/CreateGroup.vue"),
+				component: () => import("@/views/marketplace/GroupDetail.vue"),
 				meta: {
 					keepAlive: true,
 					requiresAuth: false,

@@ -98,6 +98,10 @@ export namespace Master {
 	export interface CreateFromWxJieLongRequest {
 		text: string;
 	}
+	export interface MyJoinGroupRequest extends ReqPage {
+		groupName: string;
+		status: string;
+	}
 	export interface CustomizeCreateRequest {
 		name: string;
 		content: string;

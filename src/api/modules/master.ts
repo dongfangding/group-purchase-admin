@@ -18,6 +18,13 @@ export const myInitiatedGroup = (params: Master.MyInitiatedGroupPageRequest) => 
 };
 
 /**
+ * @name 我的参团
+ */
+export const myJoinGroup = (params: Master.MyJoinGroupRequest) => {
+	return http.get<ResPage<Master.List>>(PORT1 + `/groupPurchase/myJoinGroup`, params);
+};
+
+/**
  * @name 从微信接龙导入团购
  */
 export const createFromWxJieLong = (params: Master.CreateFromWxJieLongRequest) => {

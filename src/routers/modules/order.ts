@@ -14,7 +14,7 @@ const orderRouter: Array<RouteRecordRaw> = [
 			{
 				path: "/order/index",
 				name: "order",
-				component: () => import("@/views/order/index.vue"),
+				component: () => import("@/views/order/orderTab.vue"),
 				meta: {
 					keepAlive: true,
 					requiresAuth: true,

@@ -49,7 +49,7 @@ import { personalInfo, completeInfo, sendEmailVerify } from "@/api/modules/user"
 const dialogVisible = ref(false);
 
 // 用户表单数据
-let personInfoForm = ref<UserInfo.PersonalInfoResponse>({} as UserInfo.PersonalInfoResponse);
+let personInfoForm = ref<any>({} as any);
 
 onMounted(() => {
 	personalInfo().then(res => {

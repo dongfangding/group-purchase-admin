@@ -109,6 +109,7 @@ export namespace Master {
 		endTime: number;
 		goodName: string;
 		goodDescription: string;
+		goodPic: string;
 		price: number;
 		stock: number;
 		limitType: string;

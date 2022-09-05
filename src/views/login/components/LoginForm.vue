@@ -61,6 +61,7 @@ import { loginApi, sendSmsCode } from "@/api/modules/login";
 import { GlobalStore } from "@/store";
 import { MenuStore } from "@/store/modules/menu";
 import { TabsStore } from "@/store/modules/tabs";
+import { personalInfo } from "@/api/modules/user";
 //引入组件
 import Verify from "@/components/verifition/Verify.vue";
 // import md5 from "js-md5";
@@ -160,13 +161,17 @@ const login = (formEl: FormInstance | undefined) => {
 				uuid: uuid.value
 				// credential: md5(loginForm.password)
 			};
-			const res = await loginApi(requestLoginForm);
-			// * 存储 token
-			globalStore.setToken(res.data!.token);
-			// * 登录成功之后清除上个账号的 menulist 和 tabs 数据
-			menuStore.setMenuList([]);
-			tabStore.closeMultipleTab();
-
+			await loginApi(requestLoginForm).then(res => {
+				// * 存储 token
+				globalStore.setToken(res.data!.token);
+				// * 登录成功之后清除上个账号的 menulist 和 tabs 数据
+				menuStore.setMenuList([]);
+				tabStore.closeMultipleTab();
+				personalInfo().then(res1 => {
+					console.log(res1.data);
+					globalStore.setUserInfo(res1.data || {});
+				});
+			});
 			ElMessage.success("登录成功！");
 			router.push({ name: "home" });
 		} finally {

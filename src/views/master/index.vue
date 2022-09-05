@@ -36,7 +36,9 @@
 			>
 				<!-- 表格 header 按钮 -->
 				<template #tableHeader="scope">
-					<el-button type="primary" :icon="CirclePlus">创建团购</el-button>
+					<el-button type="primary" :icon="CirclePlus" link @click="$router.push({ name: 'Edit', params: { gid: 0 } })"
+						>创建团购</el-button
+					>
 					<el-button type="primary" :icon="DocumentCopy" @click="importDialogVisible = true">导入微信接龙文案</el-button>
 					<el-button
 						type="danger"

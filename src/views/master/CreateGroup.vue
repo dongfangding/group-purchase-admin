@@ -47,6 +47,16 @@
 			<el-form-item label="商品描述" prop="goodDescription">
 				<el-input v-model="drawerData.rowData!.goodDescription" placeholder="请填写商品描述" clearable></el-input>
 			</el-form-item>
+			<el-form-item label="商品图片" prop="goodPic">
+				<UploadImg
+					v-model:file="drawerData.rowData!.goodPic"
+					:disabled="drawerData.isView"
+					:upload-style="{ width: '120px', height: '120px' }"
+					@check-validate="checkValidate('wxIdCardUrl')"
+				>
+					<template #tip> 头像大小不能超过 3M </template>
+				</UploadImg>
+			</el-form-item>
 			<el-form-item label="商品单价" prop="price">
 				<el-input type="number" v-model="drawerData.rowData!.price" placeholder="请填写商品单价" clearable></el-input>
 			</el-form-item>
@@ -81,16 +91,16 @@
 </template>
 
 <script setup lang="ts" name="UserDrawer">
-import { Master } from "@/api/interface/index";
 import { ref, reactive, onMounted } from "vue";
-// import { genderType } from "@/utils/serviceDict";
 import { ElMessage, FormInstance } from "element-plus";
 import UploadImg from "@/components/UploadImg/index.vue";
 import WangEditor from "@/components/WangEditor/index.vue";
 import { useRoute } from "vue-router";
 import { requestGroupDetail } from "@/api/modules/master";
+import { customizeCreate, modifyGroupInfo } from "@/api/modules/master";
 
 const dialogVisible = ref(false);
+const groupId = ref();
 
 const rules = reactive({
 	avatar: [{ required: true, message: "请上传用户头像", trigger: "change" }],
@@ -104,7 +114,7 @@ const rules = reactive({
 interface GroupDrawerProps {
 	title: string;
 	isView: boolean;
-	rowData?: Master.CustomizeCreateRequest;
+	rowData?: any;
 	apiUrl?: (params: any) => Promise<any>;
 	getTableList?: () => Promise<any>;
 }
@@ -112,7 +122,7 @@ interface GroupDrawerProps {
 const drawerData: GroupDrawerProps = reactive({
 	isView: false,
 	title: "",
-	rowData: {} as Master.CustomizeCreateRequest
+	rowData: {} as any
 });
 
 const ruleFormRef = ref<FormInstance>();
@@ -121,9 +131,13 @@ const handleSubmit = () => {
 	ruleFormRef.value!.validate(async valid => {
 		if (!valid) return;
 		try {
-			await drawerData.apiUrl!(drawerData.rowData);
-			ElMessage.success({ message: `${drawerData.title}用户成功！` });
-			drawerData.getTableList!();
+			if (groupId.value && groupId.value != 0) {
+				await modifyGroupInfo(drawerData.rowData);
+			} else {
+				await customizeCreate(drawerData.rowData);
+			}
+			ElMessage.success({ message: `成功` });
+			refreshDetails(groupId.value);
 		} catch (error) {
 			console.log(error);
 		}
@@ -138,13 +152,19 @@ const checkValidate = (val: string) => {
 const route = useRoute();
 const loading = ref(false);
 
+// 重新加载明细
+const refreshDetails = (groupId: any) => {
+	if (!groupId || groupId == 0) return;
+	requestGroupDetail({ groupId }).then((res: any) => {
+		drawerData.rowData = res.data;
+	});
+};
+
 onMounted(() => {
-	const groupId = route.params.gid;
-	if (groupId) {
+	groupId.value = route.params.gid;
+	if (groupId.value) {
 		loading.value = true;
-		requestGroupDetail({ groupId }).then((res: any) => {
-			drawerData.rowData = res.data;
-		});
+		refreshDetails(groupId.value);
 	}
 });
 </script>

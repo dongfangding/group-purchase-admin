@@ -17,7 +17,7 @@
 							><el-button
 								@click.prevent="sendEmailVerifyFn"
 								class="email_verify_status"
-								v-if="!personInfoForm.emailVerified && personInfoForm.email"
+								v-show="!personInfoForm.emailVerified && personInfoForm.email"
 								>不可使用，点击重新发送验证邮件</el-button
 							></el-col
 						>
@@ -48,7 +48,7 @@ import UploadImg from "@/components/UploadImg/index.vue";
 import { personalInfo, completeInfo, sendEmailVerify } from "@/api/modules/user";
 const dialogVisible = ref(false);
 
-// 登录表单数据
+// 用户表单数据
 let personInfoForm = ref<UserInfo.PersonalInfoResponse>({} as UserInfo.PersonalInfoResponse);
 
 onMounted(() => {

@@ -1,7 +1,8 @@
 <script setup lang="ts" name="marketplaceComponent">
-import { myJoinGroup } from "@/api/modules/master";
+import { myJoinGroup, pay } from "@/api/modules/master";
 import { ref, watch } from "vue";
 import dayjs from "dayjs";
+import { useHandleData } from "@/hooks/useHandleData";
 
 const page = ref(1);
 const dataSource = ref<any[]>([]);
@@ -12,10 +13,16 @@ const currentRecord = ref<any>({});
 // 接收父组件传过来的值
 const props = defineProps({
 	joinStatus: {
+		// 参团状态
 		type: String,
 		default: () => null
 	}
 });
+
+// 支付
+const handlePay = (item: any) => {
+	useHandleData(pay, { joinItemId: item.joinItemId }, `确认支付?`);
+};
 
 watch(
 	page,
@@ -73,6 +80,9 @@ watch(dialogVisible, newVal => {
 					<div :class="Classes['item-time']">
 						<span>参团时间: {{ dayjs(item.joinTime * 1000).format("YYYY-MM-DD HH:mm:ss") }}</span>
 					</div>
+					<div :class="Classes['item-time']">
+						<span>订单变更时间: {{ dayjs(item.statusChangeTime).format("YYYY-MM-DD HH:mm:ss") }}</span>
+					</div>
 					<div :class="Classes['item-join']">
 						<div>
 							<el-image :class="Classes['item-group-avatar-image']" :src="item.goodPic" />
@@ -82,7 +92,7 @@ watch(dialogVisible, newVal => {
 						</div>
 						<div>
 							<div :class="Classes['item-join-info']">
-								<span>￥ {{ item.price }}</span>
+								<span>￥ {{ item.totalPrice }}</span>
 							</div>
 							<div :class="Classes['item-join-good-num']">
 								<span>共{{ item.goodNum }}件</span>
@@ -95,6 +105,7 @@ watch(dialogVisible, newVal => {
 							<el-button :class="Classes.btn" size="small" @click="$router.push({ name: 'Detail', params: { gid: item.id } })"
 								>详情</el-button
 							>
+							<el-button Primary size="small" @click="handlePay(item)" v-show="item.joinStatus == 0">支付</el-button>
 						</div>
 					</div>
 				</div>

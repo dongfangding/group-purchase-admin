@@ -76,3 +76,12 @@ export const requestGroupDetail = (params: any) => {
 export const requestJoin = (params: any) => {
 	return http.post(PORT1 + `/groupPurchase/join`, params);
 };
+
+/**
+ * 支付订单
+ * @param params
+ * @returns
+ */
+export const pay = (params: any) => {
+	return http.post(PORT1 + `/groupPurchase/simulationPay`, params);
+};

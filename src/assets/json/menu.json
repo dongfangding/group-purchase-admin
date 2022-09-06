@@ -12,6 +12,11 @@
 					"icon": "menu"
 				},
 				{
+					"path": "/home/userAddress",
+					"title": "收货地址",
+					"icon": "menu"
+				},
+				{
 					"path": "/home/modifyPassword",
 					"title": "修改密码",
 					"icon": "menu"

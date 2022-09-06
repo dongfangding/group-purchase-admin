@@ -57,6 +57,17 @@ const masterRouter: Array<RouteRecordRaw> = [
 				}
 			},
 			{
+				path: "/home/userAddress",
+				name: "UserAddress",
+				component: () => import("@/views/user/UserAddress.vue"),
+				meta: {
+					keepAlive: true,
+					requiresAuth: false,
+					title: "收货地址",
+					key: "UserAddress"
+				}
+			},
+			{
 				path: "/home/modifyPassword",
 				name: "ModifyPassword",
 				component: () => import("@/views/user/ModifyPassword.vue"),

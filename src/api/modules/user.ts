@@ -87,3 +87,11 @@ export const sendEmailVerify = (params: UserInfo.EmailVerifyRequest) => {
 export const modifyPassword = (params: any) => {
 	return http.post(PORT1 + `/userInfo/modifyPassword`, params);
 };
+
+/**
+ * 用户收货地址列表
+ * @returns
+ */
+export const userAddressList = () => {
+	return http.get(PORT1 + `/userInfo/address/all`);
+};

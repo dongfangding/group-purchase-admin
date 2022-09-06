@@ -79,3 +79,11 @@ export const completeInfo = (params: UserInfo.PersonalInfoResponse) => {
 export const sendEmailVerify = (params: UserInfo.EmailVerifyRequest) => {
 	return http.post(PORT1 + `/userInfo/sendEmailVerify`, params);
 };
+
+/**
+ * 修改密码
+ * @returns
+ */
+export const modifyPassword = (params: any) => {
+	return http.post(PORT1 + `/userInfo/modifyPassword`, params);
+};

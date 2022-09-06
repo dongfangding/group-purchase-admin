@@ -10,6 +10,11 @@
 					"path": "/home/index",
 					"title": "我发起的",
 					"icon": "menu"
+				},
+				{
+					"path": "/home/modifyPassword",
+					"title": "修改密码",
+					"icon": "menu"
 				}
 			]
 		},

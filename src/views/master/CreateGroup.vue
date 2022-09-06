@@ -60,6 +60,9 @@
 			<el-form-item label="商品单价" prop="price">
 				<el-input type="number" v-model="drawerData.rowData!.price" placeholder="请填写商品单价" clearable></el-input>
 			</el-form-item>
+			<el-form-item label="商品规格" prop="specification">
+				<el-input type="number" v-model="drawerData.rowData!.price" placeholder="请填写商品单价" clearable></el-input>
+			</el-form-item>
 			<el-form-item label="商品库存" prop="stock">
 				<el-input type="number" v-model="drawerData.rowData!.stock" placeholder="请填写商品库存" clearable></el-input>
 			</el-form-item>

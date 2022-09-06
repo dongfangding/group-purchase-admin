@@ -55,6 +55,17 @@ const masterRouter: Array<RouteRecordRaw> = [
 					title: "团购详情",
 					key: "Detail"
 				}
+			},
+			{
+				path: "/home/modifyPassword",
+				name: "ModifyPassword",
+				component: () => import("@/views/user/ModifyPassword.vue"),
+				meta: {
+					keepAlive: true,
+					requiresAuth: false,
+					title: "修改密码",
+					key: "ModifyPassword"
+				}
 			}
 			// {
 			// 	path: "/home/embedded",

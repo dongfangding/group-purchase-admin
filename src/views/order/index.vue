@@ -1,8 +1,10 @@
 <script setup lang="ts" name="marketplaceComponent">
-import { myJoinGroup, pay } from "@/api/modules/master";
+import { myJoinGroup } from "@/api/modules/master";
 import { ref, watch } from "vue";
 import dayjs from "dayjs";
-import { useHandleData } from "@/hooks/useHandleData";
+import { useRouter } from "vue-router";
+
+const route = useRouter();
 
 const page = ref(1);
 const dataSource = ref<any[]>([]);
@@ -21,7 +23,8 @@ const props = defineProps({
 
 // 支付
 const handlePay = (item: any) => {
-	useHandleData(pay, { joinItemId: item.joinItemId }, `确认支付?`);
+	console.log(item);
+	route.push("pay");
 };
 
 watch(

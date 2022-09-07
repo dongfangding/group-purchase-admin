@@ -15,7 +15,14 @@
 			<el-descriptions-item label="结束时间：">{{ dayjs(dataSource.endTime).format("YYYY-MM-DD") }}</el-descriptions-item>
 			<el-descriptions-item label="商品信息：">{{ dataSource.goodName || "-" }}</el-descriptions-item>
 			<el-descriptions-item label="商品描述：">{{ dataSource.goodDescription || "-" }}</el-descriptions-item>
-			<el-descriptions-item label="商品图片">{{ dataSource.goodPic || "-" }}</el-descriptions-item>
+			<el-descriptions-item label="商品图片： ">
+				<el-image
+					style="width: 100px; height: 100px"
+					:src="dataSource.goodPic"
+					:preview-src-list="[dataSource.goodPic]"
+					:initial-index="0"
+					fit="cover"
+			/></el-descriptions-item>
 			<el-descriptions-item label="商品单价：">￥{{ dataSource.price || 0 }}</el-descriptions-item>
 			<el-descriptions-item label="商品库存：">{{ dataSource.stock || 0 }} 个</el-descriptions-item>
 			<el-descriptions-item label="备注：">

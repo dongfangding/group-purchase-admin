@@ -21,6 +21,17 @@ const orderRouter: Array<RouteRecordRaw> = [
 					title: "我的跟团",
 					key: "index"
 				}
+			},
+			{
+				path: "/order/pay",
+				name: "pay",
+				component: () => import("@/views/order/pay.vue"),
+				meta: {
+					keepAlive: true,
+					requiresAuth: false,
+					title: "我的跟团",
+					key: "pay"
+				}
 			}
 		]
 	}

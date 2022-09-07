@@ -95,3 +95,19 @@ export const modifyPassword = (params: any) => {
 export const userAddressList = () => {
 	return http.get(PORT1 + `/userInfo/address/all`);
 };
+
+/**
+ * 新增或修改收货地址
+ * @returns
+ */
+export const modifyUserAddress = (params: any) => {
+	return http.post(PORT1 + `/userInfo/address/saveOrUpdate`, params);
+};
+
+/**
+ * 删除用户收货地址
+ * @returns
+ */
+export const deleteUserAddress = (id: any) => {
+	return http.post(PORT1 + `/userInfo/address/delete?id=` + id);
+};

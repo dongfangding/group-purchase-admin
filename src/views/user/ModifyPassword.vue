@@ -1,6 +1,14 @@
 <template>
 	<div :style="{ 'text-align': 'center', width: '40%' }">
-		<el-form ref="passwordFormRef" :model="passwordForm" size="large" :rules="formRules">
+		<el-form
+			ref="passwordFormRef"
+			:model="passwordForm"
+			size="large"
+			:rules="formRules"
+			:label-position="labelPosition"
+			label-width="80px"
+			style="max-width: 460px"
+		>
 			<el-form-item prop="mobile" label="手机号">
 				<el-input v-model="passwordForm.mobile"> </el-input>
 			</el-form-item>
@@ -58,6 +66,7 @@ import Verify from "@/components/verifition/Verify.vue";
 
 const router = useRouter();
 const loading = ref<boolean>(false);
+const labelPosition = ref("right");
 type FormInstance = InstanceType<typeof ElForm>;
 const passwordFormRef = ref<FormInstance>();
 const formRules = reactive({
@@ -116,9 +125,6 @@ const getAuthCode = async () => {
 		return;
 	}
 	openVerify();
-	// await createFromWxJieLong({ text: ref(wxText).value });
-	// importDialogVisible.value = false;
-	// proTable.value.refresh();
 };
 
 // 验证码成功回调事件， 发送验证码

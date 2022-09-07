@@ -1,7 +1,7 @@
 <template>
 	<el-dialog v-model="dialogVisible" title="个人资料" width="500px" draggable>
 		<div :style="{ 'text-align': 'center' }">
-			<el-form ref="personInfoFormRef" :model="personInfoForm" size="large">
+			<el-form ref="personInfoFormRef" :model="personInfoForm" size="large" :label-position="labelPosition" label-width="60px">
 				<el-form-item label="头像" prop="avatarUrl">
 					<UploadImg v-model:file="personInfoForm.avatarUrl" :upload-style="{ width: '120px', height: '120px' }">
 						<template #tip> 头像大小不能超过 3M </template>
@@ -47,13 +47,13 @@ import { UserFilled } from "@element-plus/icons-vue";
 import UploadImg from "@/components/UploadImg/index.vue";
 import { personalInfo, completeInfo, sendEmailVerify } from "@/api/modules/user";
 const dialogVisible = ref(false);
+const labelPosition = ref("right");
 
 // 用户表单数据
 let personInfoForm = ref<any>({} as any);
 
 onMounted(() => {
 	personalInfo().then(res => {
-		// 怎么抑制这个缺少属性的错误呢？
 		personInfoForm.value = res.data || {};
 	});
 });

@@ -23,7 +23,8 @@ const props = defineProps({
 
 // 支付
 const handlePay = (item: any) => {
-	route.push("pay", item);
+	console.log(item);
+	route.push("pay");
 };
 
 watch(

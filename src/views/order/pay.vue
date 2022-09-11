@@ -9,7 +9,7 @@ import { pay } from "@/api/modules/master";
 import { useHandleData } from "@/hooks/useHandleData";
 
 const payRequest = {
-	joinItemId: 20,
+	joinItemId: 21,
 	payType: "WECHAT_PAY",
 	remark: "备注",
 	receiverName: "收货人名称",
@@ -22,7 +22,7 @@ const payRequest = {
 
 // 支付
 const handlePay = () => {
-	useHandleData(pay, { payRequest }, `确认支付?`);
+	useHandleData(pay, payRequest, `确认支付?`);
 };
 </script>
 

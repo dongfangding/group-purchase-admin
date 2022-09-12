@@ -167,11 +167,17 @@ const login = (formEl: FormInstance | undefined) => {
 				// * 登录成功之后清除上个账号的 menulist 和 tabs 数据
 				menuStore.setMenuList([]);
 				tabStore.closeMultipleTab();
-				personalInfo().then(res1 => {
-					console.log(res1.data);
-					globalStore.setUserInfo(res1.data || {});
-				});
+				// personalInfo()
+				// 	.then(res1 => {
+				// 		console.log(res1.data);
+				// 		globalStore.setUserInfo(res1.data || {});
+				// 	})
+				// 	.catch(error => {
+				// 		console.log("error", error);
+				// 	});
 			});
+			const res = await personalInfo();
+			globalStore.setUserInfo(res.data || {});
 			ElMessage.success("登录成功！");
 			router.push({ name: "home" });
 		} finally {

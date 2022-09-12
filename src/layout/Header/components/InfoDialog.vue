@@ -41,22 +41,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, toRef } from "vue";
 import { UserInfo } from "@/api/interface";
 import { UserFilled } from "@element-plus/icons-vue";
 import UploadImg from "@/components/UploadImg/index.vue";
-import { personalInfo, completeInfo, sendEmailVerify } from "@/api/modules/user";
+import { completeInfo, sendEmailVerify } from "@/api/modules/user";
+import { GlobalStore } from "@/store";
 const dialogVisible = ref(false);
 const labelPosition = ref("right");
+const globalStore = GlobalStore();
 
 // 用户表单数据
-let personInfoForm = ref<any>({} as any);
+let personInfoForm = toRef(globalStore, "userInfo");
 
-onMounted(() => {
-	personalInfo().then(res => {
-		personInfoForm.value = res.data || {};
-	});
-});
+// onMounted(() => {
+// 	personalInfo().then(res => {
+// 		personInfoForm.value = res.data || {};
+// 	});
+// });
 
 // openDialog
 const openDialog = () => {

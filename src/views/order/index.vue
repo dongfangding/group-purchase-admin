@@ -1,16 +1,18 @@
-<script setup lang="ts" name="marketplaceComponent">
-import { myJoinGroup } from "@/api/modules/master";
+<script setup name="marketplaceComponent">
+import { ElMessageBox } from "element-plus";
+import { myJoinGroup, pay } from "@/api/modules/master";
 import { ref, watch } from "vue";
 import dayjs from "dayjs";
-import { useRouter } from "vue-router";
-
-const route = useRouter();
+import UserAddressModal from "./UserAddressModal.vue";
 
 const page = ref(1);
-const dataSource = ref<any[]>([]);
+const dataSource = ref([]);
 const total = ref(0);
-const dialogVisible = ref(false);
-const currentRecord = ref<any>({});
+const drawerVisible = ref(false);
+const currentRecord = ref({});
+const addressVisible = ref(false);
+
+const formData = ref(currentRecord);
 
 // 接收父组件传过来的值
 const props = defineProps({
@@ -22,15 +24,43 @@ const props = defineProps({
 });
 
 // 支付
-const handlePay = (item: any) => {
-	console.log(item);
-	route.push("pay");
+const handlePay = item => {
+	currentRecord.value = item;
+	drawerVisible.value = true;
+};
+
+const handleSelectAddress = val => {
+	formData.value = {
+		...formData.value,
+		receiverDetailAddress: val.detailAddress,
+		receiverMobile: val.mobile,
+		receiverName: val.receiverName
+	};
+};
+
+const cancelClick = () => {
+	addressVisible.value = false;
+};
+
+const confirmClick = () => {
+	ElMessageBox.confirm("确定要提交支付吗?")
+		.then(() => {
+			pay({
+				...formData.value,
+				totalPrice: (currentRecord.value.price || 0) * (formData.value.goodNum || 0) || 0
+			}).then(() => {
+				drawerVisible.value = false;
+			});
+		})
+		.catch(() => {
+			// catch error
+		});
 };
 
 watch(
 	page,
 	() => {
-		myJoinGroup({ pageNum: page.value, pageSize: 20, joinStatus: props.joinStatus } as any).then((res: any) => {
+		myJoinGroup({ pageNum: page.value, pageSize: 20, joinStatus: props.joinStatus }).then(res => {
 			dataSource.value = res.data?.content || [];
 			total.value = res.total || 0;
 		});
@@ -38,7 +68,11 @@ watch(
 	{ immediate: true }
 );
 
-watch(dialogVisible, newVal => {
+watch(currentRecord, () => {
+	formData.value = currentRecord.value || {};
+});
+
+watch(drawerVisible, newVal => {
 	if (!newVal) {
 		currentRecord.value = {};
 	}
@@ -105,9 +139,6 @@ watch(dialogVisible, newVal => {
 					<div :class="Classes['item-operate']">
 						<div :class="Classes['item-operate-status']">{{ item.joinStatusName }}</div>
 						<div :class="Classes['item-operate-btns']">
-							<el-button :class="Classes.btn" size="small" @click="$router.push({ name: 'Detail', params: { gid: item.id } })"
-								>详情</el-button
-							>
 							<el-button Primary size="small" @click="handlePay(item)" v-show="item.joinStatus == 0">支付</el-button>
 						</div>
 					</div>
@@ -115,12 +146,79 @@ watch(dialogVisible, newVal => {
 			</div>
 		</div>
 		<div :style="{ position: 'sticky', bottom: '-22px', textAlign: 'right', background: '#fff', marginRight: '-16px' }">
-			<el-pagination layout="prev, pager, next" :total="total" @current-change="(p: number) => (page = p)" />
+			<el-pagination layout="prev, pager, next" :total="total" @current-change="p => (page = p)" />
 		</div>
 	</div>
+	<el-drawer v-model="drawerVisible" title="订单信息" size="400" direction="rtl" :custom-class="Classes.drawer">
+		<section :class="Classes['section-wrapper']" @click="addressVisible = true">
+			<div :style="{ display: 'flex', alignItems: 'center', cursor: 'pointer' }">
+				<div :style="{ flex: 1 }">
+					<template v-if="currentRecord?.receiverName">
+						<span
+							><strong>{{ formData.receiverName }}</strong
+							>{{ formData.receiverMobile }}</span
+						>
+						<div>{{ formData.receiverDetailAddress }}</div>
+					</template>
+					<div v-else>请选择收货地址</div>
+				</div>
+				<el-icon :style="{ width: '20px', marginLeft: '10px' }" size="20"><ArrowRightBold /></el-icon>
+			</div>
+		</section>
+		<section :class="Classes['section-wrapper']">
+			<div :style="{ display: 'flex' }">
+				<img :style="{ width: '160px', height: '160px' }" :src="currentRecord.goodPic" />
+				<section
+					:style="{ display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'space-between', marginLeft: '10px' }"
+				>
+					<div>
+						<strong>{{ currentRecord.goodName }}</strong>
+						<div>{{ currentRecord.goodDescription }}</div>
+					</div>
+					<div>
+						<div>￥{{ currentRecord.price }}</div>
+						<el-form-item>
+							<el-input-number v-model="formData.goodNum" />
+						</el-form-item>
+					</div>
+				</section>
+			</div>
+			<div :style="{ borderTop: '1px solid #f0f0f0', marginTop: '8px', paddingTop: '10px' }">
+				<span>商品总价</span>
+				<span>￥{{}}</span>
+			</div>
+			<div>
+				共 {{ formData.goodNum }} 件
+				<strong
+					>实际支付 <span>￥{{ (currentRecord.price || 0) * (formData.goodNum || 0) || 0 }}</span></strong
+				>
+			</div>
+		</section>
+		<section :class="Classes['section-wrapper']">
+			备注：<el-form-item name="content">
+				<el-input v-model="formData.remark" autosize type="textarea" placeholder="请输入您需要备注的内容" />
+			</el-form-item>
+		</section>
+		<section :class="Classes['section-wrapper']">
+			<el-radio-group v-model="formData.payType" size="large">
+				<el-radio-button label="微信支付" value="WECHAT_PAY" />
+				<el-radio-button label="支付宝支付" value="ZHIFU_PAY" />
+			</el-radio-group>
+		</section>
+		<template #footer>
+			<div style="flex: auto">
+				<el-button @click="cancelClick">取消</el-button>
+				<el-button type="primary" @click="confirmClick">确认支付</el-button>
+			</div>
+		</template>
+	</el-drawer>
+	<UserAddressModal v-model:visible="addressVisible" @ok="handleSelectAddress" />
 </template>
 
 <style module="Classes">
+.drawer {
+	padding: 0;
+}
 .item-wrapper {
 	display: inline-block;
 	width: 30%;
@@ -226,5 +324,23 @@ watch(dialogVisible, newVal => {
 }
 .item-description-value {
 	margin-left: 6px;
+}
+.section-wrapper {
+	padding: 10px;
+	border-bottom: 10px solid #f0f0f0;
+}
+</style>
+<style>
+.el-drawer__body {
+	padding: 0 !important;
+}
+.el-form-item--default {
+	margin-bottom: 0;
+}
+ul,
+li {
+	padding: 0;
+	margin: 0;
+	list-style: none;
 }
 </style>

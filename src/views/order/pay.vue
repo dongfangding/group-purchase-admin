@@ -11,6 +11,8 @@ import { useHandleData } from "@/hooks/useHandleData";
 const payRequest = {
 	joinItemId: 21,
 	payType: "WECHAT_PAY",
+	goodId: "", // 商品id
+	goodNum: 100, // 最终商品数量
 	remark: "备注",
 	receiverName: "收货人名称",
 	receiverMobile: "收货人联系电话",

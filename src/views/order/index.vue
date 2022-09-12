@@ -81,7 +81,7 @@ watch(drawerVisible, newVal => {
 
 <template>
 	<div class="table-box">
-		<div :style="{ overflow: 'auto', margin: '-8px' }">
+		<div :style="{ overflow: 'auto', margin: '-8px' }" v-if="dataSource.length">
 			<div
 				:style="{
 					display: 'flex',
@@ -145,6 +145,7 @@ watch(drawerVisible, newVal => {
 				</div>
 			</div>
 		</div>
+		<el-empty description="暂无数据" v-else />
 		<div :style="{ position: 'sticky', bottom: '-22px', textAlign: 'right', background: '#fff', marginRight: '-16px' }">
 			<el-pagination layout="prev, pager, next" :total="total" @current-change="p => (page = p)" />
 		</div>

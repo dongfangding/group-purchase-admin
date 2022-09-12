@@ -1,20 +1,21 @@
 <template>
 	<div>
-		<el-tabs v-model="activeName" class="demo-tabs">
-			<el-tab-pane label="全部" name="all"><OrderIndex joinStatus="" /></el-tab-pane>
-			<el-tab-pane lazy="false" label="待支付" name="wait_pay"><OrderIndex joinStatus="WAIT_PAY" /></el-tab-pane>
-			<el-tab-pane lazy="false" label="已完成" name="complete"><OrderIndex joinStatus="COMPLETE" /></el-tab-pane>
-			<el-tab-pane lazy="false" label="已退款" name="refund"><OrderIndex joinStatus="REFUND" /></el-tab-pane>
-			<el-tab-pane lazy="false" label="已关闭" name="closed"><OrderIndex joinStatus="CLOSED" /></el-tab-pane>
+		<el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+			<el-tab-pane label="全部" name=""></el-tab-pane>
+			<el-tab-pane lazy label="待支付" name="WAIT_PAY"></el-tab-pane>
+			<el-tab-pane lazy label="已完成" name="COMPLETE"></el-tab-pane>
+			<el-tab-pane lazy label="已退款" name="REFUND"></el-tab-pane>
+			<el-tab-pane lazy label="已关闭" name="CLOSED"></el-tab-pane>
 		</el-tabs>
+		<OrderIndex :key="activeName" :joinStatus="activeName == 0 ? '' : activeName" />
 	</div>
 </template>
 
-<script setup lang="ts" name="orderTab">
+<script setup name="orderTab">
 import OrderIndex from "@/views/order/index.vue";
 import { ref } from "vue";
 
-const activeName = ref("all");
+const activeName = ref("");
 </script>
 
 <style scoped lang="scss"></style>

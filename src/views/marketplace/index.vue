@@ -150,23 +150,24 @@ watch(dialogVisible, newVal => {
 		<div :style="{ position: 'sticky', bottom: '-22px', textAlign: 'right', background: '#fff', marginRight: '-16px' }">
 			<el-pagination layout="prev, pager, next" :total="total" @current-change="(p: number) => (page = p)" />
 		</div>
+
+		<el-dialog v-model="dialogVisible" :title="currentRecord.name" :width="360">
+			<el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm" status-icon>
+				<el-form-item label="商品名称">
+					<span>{{ currentRecord.goodName }}</span>
+				</el-form-item>
+				<el-form-item label="团购数量" prop="goodNum">
+					<el-input-number v-model="ruleForm.goodNum" :min="1" :max="currentRecord.stock" />
+				</el-form-item>
+			</el-form>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="dialogVisible = false">取消</el-button>
+					<el-button type="primary" @click="handleConfirm">确认</el-button>
+				</span>
+			</template>
+		</el-dialog>
 	</div>
-	<el-dialog v-model="dialogVisible" :title="currentRecord.name" :width="360">
-		<el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm" status-icon>
-			<el-form-item label="商品名称">
-				<span>{{ currentRecord.goodName }}</span>
-			</el-form-item>
-			<el-form-item label="团购数量" prop="goodNum">
-				<el-input-number v-model="ruleForm.goodNum" :min="1" :max="currentRecord.stock" />
-			</el-form-item>
-		</el-form>
-		<template #footer>
-			<span class="dialog-footer">
-				<el-button @click="dialogVisible = false">取消</el-button>
-				<el-button type="primary" @click="handleConfirm">确认</el-button>
-			</span>
-		</template>
-	</el-dialog>
 </template>
 
 <style module="Classes">

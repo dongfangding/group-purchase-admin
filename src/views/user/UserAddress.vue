@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="table-box">
 		<div :style="{ 'margin-bottom': '8px' }">
 			<el-button type="primary" @click="openDialog('新增地址')" plain>新增地址</el-button>
 		</div>

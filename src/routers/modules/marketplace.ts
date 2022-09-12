@@ -19,7 +19,7 @@ const marketplaceRouter: Array<RouteRecordRaw> = [
 					keepAlive: true,
 					requiresAuth: true,
 					title: "团购市场",
-					key: "index"
+					key: "Marketplace"
 				}
 			}
 		]

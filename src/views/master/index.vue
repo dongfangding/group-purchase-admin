@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="table-box">
 		<el-dialog v-model="importDialogVisible" title="从微信接龙导入" width="30%">
 			<el-button v-copy="importExample" style="margin-bottom: 15px">复制</el-button>
 			<el-input

@@ -71,14 +71,14 @@ watch(dialogVisible, newVal => {
 						<div :class="Classes['item-group-master-name']">
 							{{ item.groupMasterName }}
 						</div>
-						<div>
+						<!-- <div>
 							<div :class="Classes['item-group-join-info']">
 								<span>100人跟团</span>
 							</div>
 							<div :class="Classes['item-group-join-info']">
 								<span>1000人查看</span>
 							</div>
-						</div>
+						</div> -->
 					</div>
 
 					<div :class="Classes['item-title']">
@@ -110,7 +110,7 @@ watch(dialogVisible, newVal => {
 						</div>
 					</div>
 					<el-divider :style="{ margin: '12px 0' }" />
-					<div :class="Classes['item-descriptions']">
+					<!-- <div :class="Classes['item-descriptions']">
 						<div :class="Classes['item-description']">
 							<span :class="Classes['item-description-label']">实际收入</span
 							><span :class="Classes['item-description-value']">￥0.00</span>
@@ -119,7 +119,7 @@ watch(dialogVisible, newVal => {
 							<span :class="Classes['item-description-label']">退款金额</span
 							><span :class="Classes['item-description-value']">￥0</span>
 						</div>
-					</div>
+					</div> -->
 					<div :class="Classes['item-descriptions']">
 						<div :class="Classes['item-description']">
 							<span :class="Classes['item-description-label']">已跟团</span

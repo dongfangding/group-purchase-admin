@@ -16,10 +16,11 @@
 				<UploadImg
 					v-model:file="drawerData.rowData!.wxIdCardUrl"
 					:disabled="drawerData.isView"
+					:file-size="5"
 					:upload-style="{ width: '120px', height: '120px' }"
 					@check-validate="checkValidate('wxIdCardUrl')"
 				>
-					<template #tip> 头像大小不能超过 3M </template>
+					<template #tip> 大小不能超过 5M </template>
 				</UploadImg>
 			</el-form-item>
 			<el-form-item label="开始时间">
@@ -51,10 +52,11 @@
 				<UploadImg
 					v-model:file="drawerData.rowData!.goodPic"
 					:disabled="drawerData.isView"
+					:file-size="5"
 					:upload-style="{ width: '120px', height: '120px' }"
 					@check-validate="checkValidate('wxIdCardUrl')"
 				>
-					<template #tip> 头像大小不能超过 3M </template>
+					<template #tip> 大小不能超过 5M </template>
 				</UploadImg>
 			</el-form-item>
 			<el-form-item label="商品单价" prop="price">

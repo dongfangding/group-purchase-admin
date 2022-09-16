@@ -21,7 +21,7 @@ const axiosCanceler = new AxiosCanceler();
 const config = {
 	// 默认地址请求地址，可在 .env 开头文件中修改
 	baseURL: import.meta.env.VITE_API_URL as string,
-	// 设置超时时间（10s）
+	// 设置超时时间（60s）,超时时间长是因为附件那里，宽带受限，目前必须这样，否则视频上传，后端流还没读完，请求就断了
 	timeout: ResultEnum.TIMEOUT as number,
 	// 跨域时候不允许携带凭证，否则后端跨域响应相关不能返回*
 	withCredentials: false

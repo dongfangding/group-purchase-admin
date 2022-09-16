@@ -3,8 +3,8 @@
 		<div :style="{ 'text-align': 'center' }">
 			<el-form ref="personInfoFormRef" :model="personInfoForm" size="large" :label-position="labelPosition" label-width="60px">
 				<el-form-item label="头像" prop="avatarUrl">
-					<UploadImg v-model:file="personInfoForm.avatarUrl" :upload-style="{ width: '120px', height: '120px' }">
-						<template #tip> 头像大小不能超过 3M </template>
+					<UploadImg v-model:file="personInfoForm.avatarUrl" :file-size="5" :upload-style="{ width: '120px', height: '120px' }">
+						<template #tip> 大小不能超过 5M </template>
 					</UploadImg>
 				</el-form-item>
 				<el-form-item prop="nickname" label="昵称">

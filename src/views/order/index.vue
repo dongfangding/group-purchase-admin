@@ -118,7 +118,7 @@ watch(drawerVisible, newVal => {
 						<span>参团时间: {{ dayjs(item.joinTime * 1000).format("YYYY-MM-DD HH:mm:ss") }}</span>
 					</div>
 					<div :class="Classes['item-time']">
-						<span>订单变更时间: {{ dayjs(item.statusChangeTime).format("YYYY-MM-DD HH:mm:ss") }}</span>
+						<span>订单变更时间: {{ dayjs(item.statusChangeTime * 1000).format("YYYY-MM-DD HH:mm:ss") }}</span>
 					</div>
 					<div :class="Classes['item-join']">
 						<div>
@@ -129,7 +129,7 @@ watch(drawerVisible, newVal => {
 						</div>
 						<div>
 							<div :class="Classes['item-join-info']">
-								<span>￥ {{ item.totalPrice }}</span>
+								<span>￥{{ item.totalPrice }}</span>
 							</div>
 							<div :class="Classes['item-join-good-num']">
 								<span>共{{ item.goodNum }}件</span>

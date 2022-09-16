@@ -123,15 +123,15 @@ watch(dialogVisible, newVal => {
 					<div :class="Classes['item-descriptions']">
 						<div :class="Classes['item-description']">
 							<span :class="Classes['item-description-label']">已跟团</span
-							><span :class="Classes['item-description-value']">0人/次</span>
+							><span :class="Classes['item-description-value']">{{ item.statistics.payCount }}人/次</span>
 						</div>
 						<div :class="Classes['item-description']">
 							<span :class="Classes['item-description-label']">取消跟团</span
-							><span :class="Classes['item-description-value']">0人/次</span>
+							><span :class="Classes['item-description-value']">{{ item.statistics.returnCount }}人/次</span>
 						</div>
 						<div :class="Classes['item-description']">
 							<span :class="Classes['item-description-label']">查看</span
-							><span :class="Classes['item-description-value']">0人</span>
+							><span :class="Classes['item-description-value']">{{ item.statistics.viewCount }}人</span>
 						</div>
 					</div>
 				</div>

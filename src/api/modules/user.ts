@@ -105,6 +105,14 @@ export const modifyUserAddress = (params: any) => {
 };
 
 /**
+ * 获取用户默认收货地址
+ * @returns
+ */
+export const defaultUserAddress = () => {
+	return http.get(PORT1 + `/userInfo/address/default`);
+};
+
+/**
  * 删除用户收货地址
  * @returns
  */

@@ -52,7 +52,7 @@
 					</el-button>
 				</template>
 				<template #publicFlag="scope">
-					{{ scope.publicFlag ? "已发布" : "未发布" }}
+					{{ scope.row.publicFlag ? "已发布" : "未发布" }}
 				</template>
 				<!-- 表格操作 -->
 				<template #operation="scope">

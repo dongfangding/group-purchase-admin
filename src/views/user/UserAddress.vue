@@ -11,6 +11,7 @@
 			<el-table-column prop="receiverName" label="收件人" width="100" />
 			<el-table-column prop="mobile" label="联系方式" width="120" />
 			<el-table-column prop="detailAddress" label="详细地址" width="180" />
+			<el-table-column prop="defaultFlag" label="默认地址" width="120" :formatter="defaultFlagRender"> </el-table-column>
 			<el-table-column prop="buildingNo" label="楼号" width="80" />
 			<el-table-column prop="roomNo" label="房号" width="80" />
 			<el-table-column fixed="right" label="操作" width="120">
@@ -21,7 +22,14 @@
 			</el-table-column>
 		</el-table>
 
-		<el-dialog v-model="dialogVisble" :title="dialogTitle" width="500px" top="50px">
+		<el-dialog
+			v-model="dialogVisble"
+			:title="dialogTitle"
+			:currentRecord="currentRecord"
+			width="500px"
+			top="50px"
+			show-close="false"
+		>
 			<div :style="{ 'margin-right': '60px' }">
 				<el-form
 					ref="addressFormRef"
@@ -55,11 +63,15 @@
 					<el-form-item prop="roomNo" label="房号">
 						<el-input v-model="addressForm.roomNo"> </el-input>
 					</el-form-item>
+					<el-form-item prop="defaultFlag" label="默认地址">
+						<el-checkbox v-model="addressForm.defaultFlag" label="defaultFlag" key="defaultFlag"> 设置为默认地址 </el-checkbox>
+					</el-form-item>
 				</el-form>
 			</div>
 
 			<div :style="{ 'text-align': 'center' }">
 				<el-button plain round @click="modifyFn(addressFormRef)" size="large" type="primary" :loading="loading"> 确认 </el-button>
+				<el-button plain round @click="closeFn" size="large" type="primary"> 关闭 </el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -72,11 +84,13 @@ import type { ElForm } from "element-plus";
 import { ElMessage } from "element-plus";
 import { modifyUserAddress, deleteUserAddress } from "@/api/modules/user";
 import { useHandleData } from "@/hooks/useHandleData";
+import { deepCopy } from "@/utils/util";
 
 const tableData = ref<any>([]);
 const dialogVisble = ref(false);
 const dialogTitle = ref("");
 const labelPosition = ref("right");
+const currentRecord = ref<any>();
 
 onMounted(() => {
 	refreshTableData();
@@ -87,6 +101,10 @@ const refreshTableData = () => {
 	userAddressList().then((res: any) => {
 		tableData.value = res.data;
 	});
+};
+
+const defaultFlagRender = (row: any) => {
+	return row.publicFlag ? "是" : "否";
 };
 
 const loading = ref<boolean>(false);
@@ -107,8 +125,25 @@ const addressForm = reactive<any>({
 	mobile: "",
 	detailAddress: "",
 	buildingNo: "",
-	roomNo: ""
+	roomNo: "",
+	defaultFlag: false
 });
+
+/**
+ * 给地址表单属性依次赋值
+ */
+const fillAddressForm = (formdata: any) => {
+	addressForm["id"] = formdata.id;
+	addressForm["province"] = formdata.province;
+	addressForm["city"] = formdata.city;
+	addressForm["area"] = formdata.area;
+	addressForm["receiverName"] = formdata.receiverName;
+	addressForm["mobile"] = formdata.mobile;
+	addressForm["detailAddress"] = formdata.detailAddress;
+	addressForm["buildingNo"] = formdata.buildingNo;
+	addressForm["roomNo"] = formdata.roomNo;
+	addressForm["defaultFlag"] = formdata.defaultFlag;
+};
 
 // 打开弹窗
 const openDialog = (title: string) => {
@@ -116,7 +151,7 @@ const openDialog = (title: string) => {
 	dialogTitle.value = title;
 };
 
-// login
+// 修改
 const modifyFn = (formEl: FormInstance | undefined) => {
 	if (!formEl) return;
 	formEl.validate(async valid => {
@@ -133,9 +168,16 @@ const modifyFn = (formEl: FormInstance | undefined) => {
 	});
 };
 
+// 关闭弹窗
+const closeFn = () => {
+	addressFormRef.value?.resetFields();
+	dialogVisble.value = false;
+};
+
 // 编辑地址
 const edit = (rowdata: any) => {
-	addressForm.value = rowdata;
+	let copy = deepCopy(rowdata);
+	fillAddressForm(copy);
 	openDialog("编辑地址");
 };
 

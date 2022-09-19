@@ -1,9 +1,10 @@
 <script setup name="marketplaceComponent">
 import { ElMessageBox } from "element-plus";
 import { myJoinGroup, pay } from "@/api/modules/master";
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import dayjs from "dayjs";
 import UserAddressModal from "./UserAddressModal.vue";
+import { defaultUserAddress } from "@/api/modules/user";
 
 const page = ref(1);
 const dataSource = ref([]);
@@ -11,6 +12,8 @@ const total = ref(0);
 const drawerVisible = ref(false);
 const currentRecord = ref({});
 const addressVisible = ref(false);
+// 用户默认收货地址
+const userDefaultAddress = ref({});
 
 const formData = ref(currentRecord);
 
@@ -23,9 +26,23 @@ const props = defineProps({
 	}
 });
 
+onMounted(() => {
+	// 用户默认收货地址
+	defaultUserAddress().then(res => {
+		userDefaultAddress.value = res.data;
+	});
+});
+
+const fillDefaultAddress = () => {
+	currentRecord.value.receiverName = userDefaultAddress.value.receiverName;
+	currentRecord.value.receiverDetailAddress = userDefaultAddress.value.detailAddress;
+	currentRecord.value.receiverMobile = userDefaultAddress.value.mobile;
+};
+
 // 支付
 const handlePay = item => {
 	currentRecord.value = item;
+	fillDefaultAddress();
 	drawerVisible.value = true;
 };
 

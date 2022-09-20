@@ -1,10 +1,10 @@
 <template>
 	<el-dropdown trigger="click" @command="handleSetLanguage">
-		<span>
+		<!-- <span>
 			<el-tooltip effect="dark" content="国际化" placement="bottom">
 				<i :class="'iconfont icon-zhongyingwen'" class="icon-style"></i>
 			</el-tooltip>
-		</span>
+		</span> -->
 		<template #dropdown>
 			<el-dropdown-menu>
 				<el-dropdown-item :disabled="language && language === 'zh'" command="zh">简体中文</el-dropdown-item>

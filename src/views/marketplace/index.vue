@@ -7,6 +7,7 @@ import { FormInstance, ElMessage } from "element-plus";
 const page = ref(1);
 const dataSource = ref<any[]>([]);
 const total = ref(0);
+const pageSize = ref(10);
 const dialogVisible = ref(false);
 const currentRecord = ref<any>({});
 const ruleFormRef = ref<FormInstance>();
@@ -14,9 +15,9 @@ const ruleFormRef = ref<FormInstance>();
 watch(
 	page,
 	() => {
-		marketplaceGroupPageList({ pageNum: page.value, pageSize: 20 } as any).then((res: any) => {
+		marketplaceGroupPageList({ pageNum: page.value, pageSize: pageSize.value } as any).then((res: any) => {
 			dataSource.value = res.data?.content || [];
-			total.value = res.total || 0;
+			total.value = res.data.total || 0;
 		});
 	},
 	{ immediate: true }
@@ -98,7 +99,14 @@ watch(dialogVisible, newVal => {
 							:preview-src-list="item.picUrlList"
 							:initial-index="index"
 							:src="img"
-						/>
+							lazy
+						>
+							<template #error>
+								<div class="image-slot">
+									<el-icon><icon-picture /></el-icon>
+								</div>
+							</template>
+						</el-image>
 					</div>
 					<div :class="Classes['item-operate']">
 						<div :class="Classes['item-operate-status']">{{ item.statusName }}</div>
@@ -106,7 +114,7 @@ watch(dialogVisible, newVal => {
 							<el-button :class="Classes.btn" size="small" @click="$router.push({ name: 'Detail', params: { gid: item.id } })"
 								>详情</el-button
 							>
-							<el-button :class="Classes.btn" size="small" @click="handleJoin(item)">参团</el-button>
+							<el-button primary :class="Classes.btn" size="small" @click="handleJoin(item)">参团</el-button>
 						</div>
 					</div>
 					<el-divider :style="{ margin: '12px 0' }" />
@@ -123,22 +131,27 @@ watch(dialogVisible, newVal => {
 					<div :class="Classes['item-descriptions']">
 						<div :class="Classes['item-description']">
 							<span :class="Classes['item-description-label']">已跟团</span
-							><span :class="Classes['item-description-value']">{{ item.statistics.payCount }}人/次</span>
+							><span :class="Classes['item-description-value']">{{ item.statistics.payCount }}/人次</span>
 						</div>
 						<div :class="Classes['item-description']">
 							<span :class="Classes['item-description-label']">取消跟团</span
-							><span :class="Classes['item-description-value']">{{ item.statistics.returnCount }}人/次</span>
+							><span :class="Classes['item-description-value']">{{ item.statistics.returnCount }}/人次</span>
 						</div>
 						<div :class="Classes['item-description']">
 							<span :class="Classes['item-description-label']">查看</span
-							><span :class="Classes['item-description-value']">{{ item.statistics.viewCount }}人</span>
+							><span :class="Classes['item-description-value']">{{ item.statistics.viewCount }}/人次</span>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div :style="{ position: 'sticky', bottom: '-22px', textAlign: 'right', background: '#fff', marginRight: '-16px' }">
-			<el-pagination layout="prev, pager, next" :total="total" @current-change="(p: number) => (page = p)" />
+			<el-pagination
+				layout="prev, pager, next"
+				:total="total"
+				@current-change="(p: number) => (page = p)"
+				:page-size="pageSize"
+			/>
 		</div>
 
 		<el-dialog v-model="dialogVisible" :title="currentRecord.name" :width="360">
@@ -149,7 +162,7 @@ watch(dialogVisible, newVal => {
 				<el-form-item label="剩余库存">
 					<span>{{ currentRecord.remainingStock }}</span>
 				</el-form-item>
-				<el-form-item label="团购数量" prop="goodNum">
+				<el-form-item label="购买数量" prop="goodNum">
 					<el-input-number v-model="ruleForm.goodNum" :min="1" :max="currentRecord.stock" />
 				</el-form-item>
 			</el-form>
@@ -215,7 +228,7 @@ watch(dialogVisible, newVal => {
 	justify-content: space-between;
 }
 .item-image {
-	flex: 1;
+	/* flex: 1; */
 	height: 100px;
 	margin-right: 4px;
 }
@@ -246,5 +259,18 @@ watch(dialogVisible, newVal => {
 }
 .item-description-value {
 	margin-left: 6px;
+}
+.image-slot {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	font-size: 30px;
+	color: var(--el-text-color-secondary);
+	background: var(--el-fill-color-light);
+}
+.image-slot .el-icon {
+	font-size: 30px;
 }
 </style>

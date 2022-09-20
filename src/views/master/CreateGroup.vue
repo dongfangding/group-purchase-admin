@@ -85,8 +85,9 @@
 				}"
 			>
 				<el-button @click="dialogVisible = true">内容预览</el-button>
-				<el-button @click="$router.back()">取消</el-button>
-				<el-button type="primary" v-show="!drawerData.isView" @click="handleSubmit">提交</el-button>
+				<el-button @click="$router.replace('/home/index')">取消</el-button>
+				<el-button type="primary" v-show="!drawerData.isView" @click="handleSubmit(0)">暂存</el-button>
+				<el-button type="primary" v-show="!drawerData.rowData.publicFlag" @click="handleSubmit(1)">发布成团</el-button>
 			</el-form-item>
 		</el-form>
 		<el-dialog v-model="dialogVisible" title="富文本内容预览" width="1300px" top="50px">
@@ -103,7 +104,11 @@ import WangEditor from "@/components/WangEditor/index.vue";
 import { useRoute } from "vue-router";
 import { requestGroupDetail } from "@/api/modules/master";
 import { customizeCreate, modifyGroupInfo } from "@/api/modules/master";
+import { useRouter } from "vue-router";
 
+const route = useRoute();
+const loading = ref(false);
+const router = useRouter();
 const dialogVisible = ref(false);
 const groupId = ref();
 
@@ -132,10 +137,14 @@ const drawerData: GroupDrawerProps = reactive({
 
 const ruleFormRef = ref<FormInstance>();
 // 提交数据（新增/编辑）
-const handleSubmit = () => {
+const handleSubmit = (type: number) => {
 	ruleFormRef.value!.validate(async valid => {
 		if (!valid) return;
 		try {
+			if (type === 1) {
+				drawerData.rowData["publicFlag"] = true;
+				drawerData.rowData.joinItems = [];
+			}
 			if (groupId.value && groupId.value != 0) {
 				await modifyGroupInfo(drawerData.rowData);
 			} else {
@@ -143,8 +152,9 @@ const handleSubmit = () => {
 			}
 			ElMessage.success({ message: `成功` });
 			refreshDetails(groupId.value);
+			router.replace("/home/index");
 		} catch (error) {
-			console.log(error);
+			router.replace("/home/index");
 		}
 	});
 };
@@ -153,9 +163,6 @@ const handleSubmit = () => {
 const checkValidate = (val: string) => {
 	ruleFormRef.value!.validateField(val, () => {});
 };
-
-const route = useRoute();
-const loading = ref(false);
 
 // 重新加载明细
 const refreshDetails = (groupId: any) => {
@@ -180,5 +187,11 @@ onMounted(() => {
 }
 .text-center {
 	text-align: center;
+}
+.affix-container {
+	height: 400px;
+	text-align: center;
+	background: var(--el-color-primary-light-9);
+	border-radius: 4px;
 }
 </style>

@@ -10,7 +10,7 @@ export default {
 	},
 	header: {
 		componentSize: "组件大小",
-		language: "国际化",
+		// language: "国际化",
 		theme: "全局主题",
 		layoutConfig: "布局设置",
 		primary: "primary",

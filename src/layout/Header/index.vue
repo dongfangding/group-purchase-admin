@@ -8,8 +8,6 @@
 			<div class="header-icon">
 				<!-- Assembly size -->
 				<AssemblySize id="assemblySize" />
-				<!-- Language -->
-				<Language id="language" />
 				<!-- SearchMenu -->
 				<SearchMenu id="searchMenu" />
 				<!-- Theme -->
@@ -31,7 +29,6 @@ import CollapseIcon from "./components/CollapseIcon.vue";
 import Breadcrumb from "./components/Breadcrumb.vue";
 import SearchMenu from "./components/SearchMenu.vue";
 import Fullscreen from "./components/Fullscreen.vue";
-import Language from "./components/Language.vue";
 import AssemblySize from "./components/AssemblySize.vue";
 import Theme from "./components/Theme.vue";
 import Avatar from "./components/Avatar.vue";

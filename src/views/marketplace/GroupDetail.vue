@@ -32,13 +32,18 @@
 		</el-descriptions>
 		<el-divider content-position="left">备注</el-divider>
 		<div><span v-html="dataSource.content || '-'" /></div>
-		<el-divider content-position="left">他们参加了团购</el-divider>
+		<el-divider content-position="left">跟团记录</el-divider>
 		<el-table :data="dataSource.joinItems || []" style="width: 90%" border stripe>
 			<el-table-column prop="goodName" label="商品名称" width="180" />
-			<el-table-column prop="goodNum" label="购买数量" width="180" />
 			<el-table-column prop="joinUserName" label="昵称" />
-			<el-table-column prop="formatJoinTime" label="参团时间" />
+			<el-table-column prop="goodNum" label="购买数量" width="180" />
+			<el-table-column prop="formatJoinTime" label="跟团时间" />
 		</el-table>
+		<div>
+			<el-affix :offset="50" :style="{ float: 'right' }" position="bottom">
+				<el-button type="primary" @click="$router.back()">返回</el-button>
+			</el-affix>
+		</div>
 	</div>
 </template>
 

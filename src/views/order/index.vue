@@ -5,8 +5,12 @@ import { ref, watch, onMounted } from "vue";
 import dayjs from "dayjs";
 import UserAddressModal from "./UserAddressModal.vue";
 import { defaultUserAddress } from "@/api/modules/user";
+import { useRouter } from "vue-router";
+import countDown from "@/components/CountDown/index.vue";
 
+const router = useRouter();
 const page = ref(1);
+const pageSize = ref(10);
 const dataSource = ref([]);
 const total = ref(0);
 const drawerVisible = ref(false);
@@ -29,21 +33,33 @@ const props = defineProps({
 onMounted(() => {
 	// 用户默认收货地址
 	defaultUserAddress().then(res => {
-		userDefaultAddress.value = res.data;
+		userDefaultAddress.value = res.data || {};
 	});
 });
 
+// 用用户设置的默认收货地址填充下单界面的收货地址
 const fillDefaultAddress = () => {
-	currentRecord.value.receiverName = userDefaultAddress.value.receiverName;
-	currentRecord.value.receiverDetailAddress = userDefaultAddress.value.detailAddress;
-	currentRecord.value.receiverMobile = userDefaultAddress.value.mobile;
+	currentRecord.value.receiverName = userDefaultAddress.value.receiverName || "";
+	currentRecord.value.receiverDetailAddress = userDefaultAddress.value.detailAddress || "";
+	currentRecord.value.receiverMobile = userDefaultAddress.value.mobile || "";
 };
 
 // 支付
 const handlePay = item => {
+	if (item.joinTime + item.payCountDownSeconds <= new Date() / 1000) {
+		ElMessageBox.alert("订单已过期，不可支付~");
+		refreshData();
+		return;
+	}
 	currentRecord.value = item;
 	fillDefaultAddress();
 	drawerVisible.value = true;
+};
+
+// 倒计时结束事件
+const countDoenOverFn = () => {
+	// 倒计时结束，刷新订单数据
+	refreshData();
 };
 
 const handleSelectAddress = val => {
@@ -57,6 +73,7 @@ const handleSelectAddress = val => {
 
 const cancelClick = () => {
 	addressVisible.value = false;
+	drawerVisible.value = false;
 };
 
 const confirmClick = () => {
@@ -67,6 +84,7 @@ const confirmClick = () => {
 				totalPrice: (currentRecord.value.price || 0) * (formData.value.goodNum || 0) || 0
 			}).then(() => {
 				drawerVisible.value = false;
+				refreshData();
 			});
 		})
 		.catch(() => {
@@ -74,13 +92,23 @@ const confirmClick = () => {
 		});
 };
 
+// 查看团购详情，注意不是订单详情
+const redirectGroupDetailFn = item => {
+	router.replace({ name: "Detail", params: { gid: item.groupId } });
+};
+
+// 刷新数据
+const refreshData = () => {
+	myJoinGroup({ pageNum: page.value, pageSize: pageSize.value, joinStatus: props.joinStatus }).then(res => {
+		dataSource.value = res.data?.content || [];
+		total.value = res.data.total || 0;
+	});
+};
+
 watch(
 	page,
 	() => {
-		myJoinGroup({ pageNum: page.value, pageSize: 20, joinStatus: props.joinStatus }).then(res => {
-			dataSource.value = res.data?.content || [];
-			total.value = res.total || 0;
-		});
+		refreshData();
 	},
 	{ immediate: true }
 );
@@ -117,6 +145,14 @@ watch(drawerVisible, newVal => {
 						<div :class="Classes['item-group-master-name']">
 							{{ item.groupMasterName }}
 						</div>
+						<div :class="Classes['item-title']">
+							<a href="#" @click.prevent="redirectGroupDetailFn(item)"
+								>{{ item.name }}<span :style="{ color: 'gray' }">></span></a
+							>
+						</div>
+					</div>
+
+					<!-- <div :class="Classes['item-title']">
 						<div>
 							<div :class="Classes['item-group-join-info']">
 								<span>100人跟团</span>
@@ -125,12 +161,7 @@ watch(drawerVisible, newVal => {
 								<span>1000人查看</span>
 							</div>
 						</div>
-					</div>
-
-					<div :class="Classes['item-title']">
-						<!-- <el-tag :class="Classes['item-title-tag']" effect="plain" size="small">已隐藏</el-tag> -->
-						<span>{{ item.name || "-" }}</span>
-					</div>
+					</div> -->
 					<div :class="Classes['item-time']">
 						<span>参团时间: {{ dayjs(item.joinTime * 1000).format("YYYY-MM-DD HH:mm:ss") }}</span>
 					</div>
@@ -155,8 +186,15 @@ watch(drawerVisible, newVal => {
 					</div>
 					<div :class="Classes['item-operate']">
 						<div :class="Classes['item-operate-status']">{{ item.joinStatusName }}</div>
+						<count-down
+							:endTime="item.joinTime + item.payCountDownSeconds"
+							endText="已过期"
+							suffix="后关闭订单"
+							v-if="item.joinStatus == 0"
+							@count-down-over="countDoenOverFn"
+						/>
 						<div :class="Classes['item-operate-btns']">
-							<el-button Primary size="small" @click="handlePay(item)" v-show="item.joinStatus == 0">支付</el-button>
+							<el-button Primary size="small" @click="handlePay(item)" v-if="item.joinStatus == 0">支付</el-button>
 						</div>
 					</div>
 				</div>
@@ -164,7 +202,7 @@ watch(drawerVisible, newVal => {
 		</div>
 		<el-empty description="暂无数据" v-else />
 		<div :style="{ position: 'sticky', bottom: '-22px', textAlign: 'right', background: '#fff', marginRight: '-16px' }">
-			<el-pagination layout="prev, pager, next" :total="total" @current-change="p => (page = p)" />
+			<el-pagination layout="prev, pager, next" :total="total" @current-change="p => (page = p)" :page-size="pageSize" />
 		</div>
 	</div>
 	<el-drawer v-model="drawerVisible" title="订单信息" size="400" direction="rtl" :custom-class="Classes.drawer">
@@ -254,13 +292,14 @@ watch(drawerVisible, newVal => {
 .item-group-master-name {
 	flex: 1;
 	margin-left: 5px;
+	text-align: left;
 }
 .item-group-avatar-image {
 	flex: 1;
 	height: 50px;
 	margin-right: 4px;
 }
-.item-group-join-info {
+.item-group-gray {
 	font-size: 10px;
 	color: gray;
 }
@@ -271,8 +310,9 @@ watch(drawerVisible, newVal => {
 }
 .item-join-good-description {
 	flex: 1;
-	margin-left: 0;
-	font-size: 8px;
+	margin-left: 10px;
+	font-size: 12px;
+	color: gray;
 }
 .item-join-image {
 	flex: 1;
@@ -291,6 +331,10 @@ watch(drawerVisible, newVal => {
 	font-size: 18px;
 	font-weight: 500;
 	color: #000000;
+	text-decoration-line: none;
+}
+.item-title a {
+	text-decoration-line: none;
 }
 .item-title-tag {
 	margin-right: 6px;

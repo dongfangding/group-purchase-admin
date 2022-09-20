@@ -21,12 +21,12 @@
 				<span v-html="dataSource.content || '-'" />
 			</el-descriptions-item>
 		</el-descriptions>
-		<el-divider content-position="left">参团明细</el-divider>
+		<el-divider content-position="left">跟团记录</el-divider>
 		<el-table :data="dataSource.joinItems || []" style="width: 90%" border stripe>
 			<el-table-column prop="goodName" label="商品名称" width="180" />
+			<el-table-column prop="joinUserName" label="昵称" />
 			<el-table-column prop="goodNum" label="团购数量" width="180" />
-			<el-table-column prop="joinUserName" label="成员姓名" />
-			<el-table-column prop="formatJoinTime" label="加入时间" />
+			<el-table-column prop="formatJoinTime" label="跟团时间" />
 		</el-table>
 	</div>
 </template>

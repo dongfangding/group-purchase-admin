@@ -104,7 +104,7 @@ const refreshTableData = () => {
 };
 
 const defaultFlagRender = (row: any) => {
-	return row.publicFlag ? "是" : "否";
+	return row.defaultFlag ? "是" : "否";
 };
 
 const loading = ref<boolean>(false);

@@ -47,6 +47,7 @@ import { UserFilled } from "@element-plus/icons-vue";
 import UploadImg from "@/components/UploadImg/index.vue";
 import { completeInfo, sendEmailVerify } from "@/api/modules/user";
 import { GlobalStore } from "@/store";
+import { personalInfo } from "@/api/modules/user";
 const dialogVisible = ref(false);
 const labelPosition = ref("right");
 const globalStore = GlobalStore();
@@ -54,16 +55,17 @@ const globalStore = GlobalStore();
 // 用户表单数据
 let personInfoForm = toRef(globalStore, "userInfo");
 
-// onMounted(() => {
-// 	personalInfo().then(res => {
-// 		personInfoForm.value = res.data || {};
-// 	});
-// });
-
 // openDialog
 const openDialog = () => {
+	refreshUserInfo();
 	dialogVisible.value = true;
 };
+
+const refreshUserInfo = async () => {
+	const res = await personalInfo();
+	globalStore.setUserInfo(res.data || {});
+};
+
 const edit = (form: UserInfo.PersonalInfoResponse) => {
 	completeInfo(form);
 };

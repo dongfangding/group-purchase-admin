@@ -56,10 +56,16 @@
 				</template>
 				<!-- 表格操作 -->
 				<template #operation="scope">
-					<el-button type="primary" link @click="$router.push({ name: 'Detail', params: { gid: scope.row.id } })">查看</el-button>
-					<el-button type="primary" link @click="$router.push({ name: 'Edit', params: { gid: scope.row.id } })">编辑</el-button>
+					<el-button type="primary" link @click="$router.replace({ name: 'Detail', params: { gid: scope.row.id } })"
+						>查看</el-button
+					>
+					<el-button type="primary" link @click="$router.replace({ name: 'Edit', params: { gid: scope.row.id } })"
+						>编辑</el-button
+					>
 					<el-button type="primary" link @click="openUpdateStatusDialog(scope.row)">变更状态</el-button>
-					<el-button type="primary" link @click="publishGroupFn(scope.row)">发布</el-button>
+					<el-button type="primary" link @click="publishGroupFn(scope.row)">
+						{{ scope.row.publicFlag ? "取消发布" : "发布" }}
+					</el-button>
 				</template>
 			</ProTable>
 			<ImportExcel ref="dialogRef" />

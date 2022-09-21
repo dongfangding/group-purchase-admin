@@ -59,7 +59,7 @@ export default {
 				} else {
 					clearInterval(timer);
 					self.content = self.endText;
-					self.$emit("countDownOver");
+					self.$emit("count-down-over");
 				}
 			}, 1000);
 		}

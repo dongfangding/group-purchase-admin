@@ -69,6 +69,15 @@ export const requestGroupDetail = (params: any) => {
 };
 
 /**
+ * 参团订单详情
+ * @param params
+ * @returns
+ */
+export const orderDetail = (joinItemId: any) => {
+	return http.get(PORT1 + "/groupPurchase/orderDetail?joinItemId=" + joinItemId);
+};
+
+/**
  * 参团操作
  * @param params
  * @returns

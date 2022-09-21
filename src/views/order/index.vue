@@ -195,6 +195,12 @@ watch(drawerVisible, newVal => {
 						/>
 						<div :class="Classes['item-operate-btns']">
 							<el-button Primary size="small" @click="handlePay(item)" v-if="item.joinStatus == 0">支付</el-button>
+							<el-button
+								Primary
+								size="small"
+								@click="$router.push({ name: 'OrderDetail', params: { joinItemId: item.joinItemId } })"
+								>详情</el-button
+							>
 						</div>
 					</div>
 				</div>

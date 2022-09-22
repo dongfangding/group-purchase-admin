@@ -35,18 +35,27 @@
 
 		<div :class="Classes['master-div-box']">
 			<div :class="Classes['group-master-info-box']">
-				<div :class="Classes['master-info']">同润*九星超市</div>
+				<div>
+					<el-image :class="Classes['master-pic-image']" fit="fill" :src="dataSource.groupMasterAvatarUrl || ''"></el-image>
+				</div>
+				<div :class="Classes['master-info']">{{ dataSource.groupMasterNickname }}</div>
 				<div :class="Classes['group-name']">{{ dataSource.groupName }}</div>
 			</div>
 			<el-divider />
 			<div :class="Classes['group-master-good-box']">
 				<div :class="Classes['good-pic']">
-					<el-image fit="fit" :src="dataSource.orderGood ? dataSource.orderGood.groupPurchaseGoodPic : ''"></el-image>
+					<el-image
+						:class="Classes['good-pic-image']"
+						fit="fill"
+						:src="dataSource.orderGood ? dataSource.orderGood.groupPurchaseGoodPic : ''"
+					></el-image>
 				</div>
-				<div :class="Classes['good-desc']">
-					清风卷纸1600克<br />共{{ dataSource.orderGood ? dataSource.orderGood.goodNum : 0 }}件
+				<div :class="Classes['good-desc-price-box']">
+					<div :class="Classes['good-desc']">
+						清风卷纸1600克<br />共{{ dataSource.orderGood ? dataSource.orderGood.goodNum : 0 }}件
+					</div>
+					<div :class="Classes['good-price']">￥ {{ dataSource.orderGood ? dataSource.orderGood.price : 0 }}</div>
 				</div>
-				<div :class="Classes['good-price']">￥ {{ dataSource.orderGood ? dataSource.orderGood.price : 0 }}</div>
 			</div>
 			<div :class="Classes['group-master-price-box']">
 				<div :class="Classes['price-label']">商品金额</div>
@@ -66,16 +75,27 @@
 			<el-divider />
 			<div :class="Classes['order-box-row']">
 				<div :class="Classes['order-box-label']">下单人:</div>
-				<div :class="Classes['order-box-content']">尘</div>
+				<el-image :class="Classes['join-pic-image']" fit="fill" :src="dataSource.groupMasterAvatarUrl || ''"></el-image>
+				<div :class="Classes['order-box-content']">
+					{{ dataSource.groupMasterNickname }}
+				</div>
 			</div>
 			<div :class="Classes['order-box-row']">
 				<div :class="Classes['order-box-label']">订单编号:</div>
-				<div :class="Classes['order-box-content']">{{ dataSource.orderNo }}</div>
+				<div :class="Classes['order-box-content']">
+					{{ dataSource.orderNo
+					}}<el-button :class="Classes['order-box-content-copy']" v-copy="dataSource.orderNo">复制</el-button>
+				</div>
 			</div>
 			<div :class="Classes['order-box-row']">
 				<div :class="Classes['order-box-label']">支付时间:</div>
 				<div :class="Classes['order-box-content']">{{ dayjs(dataSource.payTime * 1000).format("YYYY/MM/DD HH:mm:ss") }}</div>
 			</div>
+		</div>
+		<div>
+			<el-affix :offset="50" :style="{ float: 'right' }" position="bottom">
+				<el-button type="primary" @click="$router.back()">返回</el-button>
+			</el-affix>
 		</div>
 	</div>
 </template>
@@ -148,8 +168,16 @@ onMounted(() => {
 	display: flex;
 	margin-left: 10px;
 }
+.group-master-info-box .master-pic-image {
+	flex: 1;
+	width: 20px;
+	height: 20px;
+	font-size: 16px;
+	line-height: 20px;
+}
 .group-master-info-box .master-info {
 	flex: 1;
+	margin-left: 2px;
 	font-size: 16px;
 	line-height: 20px;
 }
@@ -161,25 +189,37 @@ onMounted(() => {
 	text-align: right;
 }
 .group-master-good-box {
-	display: inline-block;
+	display: flex;
+	height: 150px;
 	margin-left: 10px;
 }
+.good-pic-image {
+	width: 130px;
+	height: 150px;
+}
 .group-master-good-box .good-pic {
-	display: inline-block;
+	width: 130px;
+	height: 150px;
+	vertical-align: middle;
+}
+.group-master-good-box .good-desc-price-box {
+	display: flex;
+	flex: 1;
 	width: 80px;
-	line-height: 50px;
+	height: 150px;
 	vertical-align: middle;
 }
 .group-master-good-box .good-desc {
-	display: inline-block;
+	flex: 1;
 	width: 200px;
+	height: 150px;
 	margin-left: 10px;
 	color: gray;
 	vertical-align: top;
 }
 .group-master-good-box .good-price {
-	display: inline-block;
 	flex: 1;
+	height: 150px;
 	padding-right: 20px;
 	color: gray;
 	text-align: right;
@@ -187,7 +227,7 @@ onMounted(() => {
 }
 .group-master-price-box {
 	display: flex;
-	margin-left: 10px;
+	margin: 10px 0 0 10px;
 }
 .group-master-price-box .price-label {
 	flex: 1;
@@ -234,11 +274,22 @@ onMounted(() => {
 	color: gray;
 	text-align: left;
 }
+.join-pic-image {
+	width: 14px;
+	height: 14px;
+	margin-right: 3px;
+}
 .order-box-content {
 	display: inline-block;
 	margin-top: 5px;
 	line-height: 14px;
 	color: gray;
 	text-align: left;
+}
+.order-box-content-copy {
+	width: 20px;
+	height: 14px;
+	margin-left: 5px;
+	line-height: 14px;
 }
 </style>

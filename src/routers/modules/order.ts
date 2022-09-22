@@ -38,7 +38,6 @@ const orderRouter: Array<RouteRecordRaw> = [
 				name: "OrderDetail",
 				component: () => import("@/views/order/OrderDetail.vue"),
 				meta: {
-					keepAlive: false,
 					requiresAuth: false,
 					title: "订单详情",
 					key: "OrderDetail"

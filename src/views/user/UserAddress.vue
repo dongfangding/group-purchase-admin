@@ -22,14 +22,7 @@
 			</el-table-column>
 		</el-table>
 
-		<el-dialog
-			v-model="dialogVisble"
-			:title="dialogTitle"
-			:currentRecord="currentRecord"
-			width="500px"
-			top="50px"
-			show-close="false"
-		>
+		<el-dialog v-model="dialogVisble" :title="dialogTitle" width="500px" top="50px" :show-close="false">
 			<div :style="{ 'margin-right': '60px' }">
 				<el-form
 					ref="addressFormRef"
@@ -90,7 +83,6 @@ const tableData = ref<any>([]);
 const dialogVisble = ref(false);
 const dialogTitle = ref("");
 const labelPosition = ref("right");
-const currentRecord = ref<any>();
 
 onMounted(() => {
 	refreshTableData();

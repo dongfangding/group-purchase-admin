@@ -187,7 +187,7 @@ watch(drawerVisible, newVal => {
 					<div :class="Classes['item-operate']">
 						<div :class="Classes['item-operate-status']">{{ item.joinStatusName }}</div>
 						<count-down
-							:endTime="item.joinTime + item.payCountDownSeconds"
+							:endTime="item.joinTime + item.payCountDownSeconds + ''"
 							endText="已过期"
 							suffix="后关闭订单"
 							v-if="item.joinStatus == 0"
@@ -247,7 +247,7 @@ watch(drawerVisible, newVal => {
 			</div>
 			<div :style="{ borderTop: '1px solid #f0f0f0', marginTop: '8px', paddingTop: '10px' }">
 				<span>商品总价</span>
-				<span>￥{{}}</span>
+				<span>￥{{ (currentRecord.price || 0) * (formData.goodNum || 0) || 0 }}</span>
 			</div>
 			<div>
 				共 {{ formData.goodNum }} 件

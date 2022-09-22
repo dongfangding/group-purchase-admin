@@ -101,11 +101,6 @@ watch(dialogVisible, newVal => {
 							:src="img"
 							lazy
 						>
-							<template #error>
-								<div class="image-slot">
-									<el-icon><icon-picture /></el-icon>
-								</div>
-							</template>
 						</el-image>
 					</div>
 					<div :class="Classes['item-operate']">

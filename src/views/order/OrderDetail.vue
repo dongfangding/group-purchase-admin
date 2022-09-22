@@ -1,6 +1,11 @@
 <template>
 	<div>
 		<div :class="Classes['div-box']">
+			<div :style="{ 'font-size': '18px', 'margin-left': '20px', color: 'black' }">
+				<strong>{{ dataSource.joinStatusName }}</strong>
+			</div>
+		</div>
+		<div :class="Classes['div-box']">
 			<div :class="Classes['row-div']">
 				<div :class="Classes['row-div-icon']">
 					<el-icon><User /></el-icon>
@@ -89,11 +94,13 @@
 			</div>
 			<div :class="Classes['order-box-row']">
 				<div :class="Classes['order-box-label']">支付时间:</div>
-				<div :class="Classes['order-box-content']">{{ dayjs(dataSource.payTime * 1000).format("YYYY/MM/DD HH:mm:ss") }}</div>
+				<div :class="Classes['order-box-content']">
+					{{ dataSource.payTime ? dayjs(dataSource.payTime * 1000).format("YYYY/MM/DD HH:mm:ss") : "未付款" }}
+				</div>
 			</div>
 		</div>
 		<div>
-			<el-affix :offset="50" :style="{ float: 'right' }" position="bottom">
+			<el-affix :offset="50" :style="{ float: 'right', 'margin-right': '30%' }" position="bottom">
 				<el-button type="primary" @click="$router.back()">返回</el-button>
 			</el-affix>
 		</div>
@@ -124,7 +131,7 @@ onMounted(() => {
 <style module="Classes">
 .div-box {
 	box-sizing: border-box;
-	width: 70%;
+	width: 60%;
 	padding: 20px 0 20px 10px;
 	margin-top: 10px;
 	font-size: 14px;
@@ -155,7 +162,7 @@ onMounted(() => {
 }
 .master-div-box {
 	box-sizing: border-box;
-	width: 70%;
+	width: 60%;
 	padding: 10px 0 20px 10px;
 	margin-top: 10px;
 	font-size: 14px;
@@ -249,7 +256,7 @@ onMounted(() => {
 }
 .order-box {
 	box-sizing: border-box;
-	width: 70%;
+	width: 60%;
 	padding: 10px 0 20px 10px;
 	margin-top: 10px;
 	font-size: 14px;

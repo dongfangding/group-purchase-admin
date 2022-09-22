@@ -17,7 +17,12 @@
 		</el-dialog>
 		<el-dialog v-model="updateStatusDialogVisible" title="更改团购状态" width="30%">
 			状态:&nbsp;<el-select v-model="dialogGroupStatus" placeholder="请选择更改后状态" clearable>
-				<el-option v-for="item in groupStatus" :key="item.value" :label="item.label" :value="item.value" />
+				<el-option
+					v-for="item in groupStatusDict"
+					:key="item.dictDetailCode"
+					:label="item.dictDetailName"
+					:value="item.requestValue"
+				/>
 			</el-select>
 			<template #footer>
 				<span class="dialog-footer">
@@ -74,16 +79,17 @@
 </template>
 
 <script setup lang="ts" name="useComponent">
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { Master } from "@/api/interface/index";
-import { groupStatus } from "@/utils/serviceDict";
+// import { groupStatus } from "@/utils/serviceDict";
 import { ColumnProps } from "@/components/ProTable/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/components/ImportExcel/index.vue";
 import { CirclePlus, Delete, DocumentCopy } from "@element-plus/icons-vue";
-import { deleteUser } from "@/api/modules/user";
+import { deleteUser, listDict } from "@/api/modules/user";
+
 import {
 	myInitiatedGroup,
 	createFromWxJieLong,
@@ -106,7 +112,20 @@ const importExample = ref<string>(
 );
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
+// 团购状态字典
+const groupStatusDict = ref<any[]>([]);
+// 由于接口使用了枚举，而不是原始状态数值， 所以需要转换一层，回显时需要拿到列表中的数值状态转换为枚举字符
+const groupStatusDictMap = ref<any>();
 
+onMounted(() => {
+	// 团购状态字典
+	listDict("GROUP_STATUS").then((res: any) => {
+		groupStatusDict.value = res.data;
+		groupStatusDictMap.value = Object.fromEntries(
+			groupStatusDict.value.map(({ dictDetailCode, requestValue }) => [dictDetailCode, requestValue])
+		);
+	});
+});
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 datalist && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 const dataCallback = (data: any) => {
 	return {
@@ -141,8 +160,8 @@ const confirmImport = async () => {
 
 const openUpdateStatusDialog = async (params: Master.List) => {
 	dialogGroupId.value = params.id;
-	// 不会处理传参的时候是字符串，但是渲染的时候又是数值，所只能先清除掉，让界面没有值，至少不是错的
-	dialogGroupStatus.value = "";
+	// 数值要转成对应枚举字符，接口传参时需要，所以select的value使用的是这个枚举字符。
+	dialogGroupStatus.value = groupStatusDictMap.value[params.status];
 	updateStatusDialogVisible.value = true;
 };
 

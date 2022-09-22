@@ -146,6 +146,8 @@ export namespace Master {
 		stock: number;
 		limitType: string;
 		limitValue: number;
+		status: number;
+		statusName: string;
 	}
 	export interface MarketplaceList extends List {
 		groupMasterName: string;

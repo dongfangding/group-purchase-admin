@@ -119,3 +119,11 @@ export const defaultUserAddress = () => {
 export const deleteUserAddress = (id: any) => {
 	return http.post(PORT1 + `/userInfo/address/delete?id=` + id);
 };
+
+/**
+ * 字典接口
+ * @returns
+ */
+export const listDict = (dictType: any) => {
+	return http.get(PORT1 + `/common/listDict?dictType=` + dictType);
+};

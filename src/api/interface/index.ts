@@ -125,6 +125,7 @@ export namespace Master {
 	export interface UpdateGroupStatusRequest {
 		id: number;
 		status: string;
+		notifyFlag: boolean;
 	}
 	export interface PublishGroupRequest {
 		id: number;

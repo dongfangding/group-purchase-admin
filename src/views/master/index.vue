@@ -24,6 +24,9 @@
 					:value="item.requestValue"
 				/>
 			</el-select>
+			<el-checkbox :style="{ 'margin-left': '5px' }" v-model="notifyFlag" label="defaultFlag" key="defaultFlag">
+				通知团员
+			</el-checkbox>
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="updateStatusDialogVisible = false">Cancel</el-button>
@@ -89,6 +92,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/components/ImportExcel/index.vue";
 import { CirclePlus, Delete, DocumentCopy } from "@element-plus/icons-vue";
 import { deleteUser, listDict } from "@/api/modules/user";
+import { ElMessage, ElMessageBox } from "element-plus";
 
 import {
 	myInitiatedGroup,
@@ -105,7 +109,10 @@ const proTable = ref();
 let importDialogVisible = ref(false);
 let updateStatusDialogVisible = ref(false);
 const wxText = ref("");
+// 更改团购状态弹框里-->团购状态值
 const dialogGroupStatus = ref("");
+// 更改团购状态弹框里-->状态变更是否通知团员
+const notifyFlag = ref(false);
 const dialogGroupId = ref();
 const importExample = ref<string>(
 	"#接龙\n半个南瓜 等会送来 共20份\n例 楼栋号-房间号 需要多少份\n\n1.295-909 6份\n2.295-910 8份\n3.295-204 2份\n\n三点截单"
@@ -167,11 +174,31 @@ const openUpdateStatusDialog = async (params: Master.List) => {
 
 // 确认更改团购状态
 const confirmUpdateStatus = async () => {
-	await updateGroupStatus({ id: dialogGroupId.value, status: dialogGroupStatus.value });
-	updateStatusDialogVisible.value = false;
-	dialogGroupStatus.value = "";
-	dialogGroupId.value = null;
-	proTable.value.refresh();
+	ElMessageBox.confirm(
+		"更改状态后不可回退，是否确定？" + (dialogGroupStatus.value == "GROUPED" ? "提示： 成团后用户将无法再参与团购" : ""),
+		{
+			confirmButtonText: "确认",
+			cancelButtonText: "取消",
+			type: "warning"
+		}
+	)
+		.then(() => {
+			updateGroupStatus({ id: dialogGroupId.value, status: dialogGroupStatus.value, notifyFlag: notifyFlag.value });
+			ElMessage({
+				type: "success",
+				message: "更改成功"
+			});
+			updateStatusDialogVisible.value = false;
+			dialogGroupStatus.value = "";
+			dialogGroupId.value = null;
+			proTable.value.refresh();
+		})
+		.catch(() => {
+			ElMessage({
+				type: "info",
+				message: "取消操作"
+			});
+		});
 };
 
 // 发布团购

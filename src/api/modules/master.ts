@@ -94,3 +94,12 @@ export const requestJoin = (params: any) => {
 export const pay = (params: any) => {
 	return http.post(PORT1 + `/groupPurchase/simulationPay`, params);
 };
+
+/**
+ * 订单跟踪
+ * @param params
+ * @returns
+ */
+export const groupTrace = (groupId: any) => {
+	return http.post(PORT1 + `/groupPurchase/listGroupTrace?groupId=` + groupId);
+};

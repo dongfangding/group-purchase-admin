@@ -2,7 +2,21 @@
 	<div>
 		<div :class="Classes['div-box']">
 			<div :style="{ 'font-size': '18px', 'margin-left': '20px', color: 'black' }">
-				<strong>{{ dataSource.joinStatusName }}</strong>
+				<el-steps :active="groupStatusSteps == 5 ? 2 : groupStatusSteps" align-center v-if="groupStatusSteps == 5">
+					<el-step title="已创建" :description="dayjs(groupTraceMap[1] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
+					<el-step title="已取消" :description="dayjs(groupTraceMap[5] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
+				</el-steps>
+				<el-steps :active="groupStatusSteps" align-center v-if="groupStatusSteps != 5">
+					<el-step title="已创建" :description="dayjs(groupTraceMap[1] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
+					<el-step title="已成团" :description="dayjs(groupTraceMap[2] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
+					<el-step title="已到货" :description="dayjs(groupTraceMap[3] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
+					<el-step title="已完成" :description="dayjs(groupTraceMap[4] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
+				</el-steps>
+			</div>
+		</div>
+		<div :class="Classes['div-box']">
+			<div :style="{ 'font-size': '18px', 'margin-left': '20px', color: 'black' }">
+				<strong>支付状态: {{ dataSource.joinStatusName }}</strong>
 			</div>
 		</div>
 		<div :class="Classes['div-box']">
@@ -114,16 +128,21 @@ import { orderDetail } from "@/api/modules/master";
 import dayjs from "dayjs";
 
 const dataSource = ref<any>({});
+// 团购状态字典
+const groupTraceMap = ref();
+const groupStatusSteps = ref(0);
 
 const route = useRoute();
 const loading = ref(false);
 
-onMounted(() => {
+onMounted(async () => {
 	const joinItemId = route.params.joinItemId;
 	if (joinItemId) {
 		loading.value = true;
-		orderDetail(joinItemId).then((res: any) => {
+		await orderDetail(joinItemId).then((res: any) => {
 			dataSource.value = res.data;
+			groupStatusSteps.value = dataSource.value.groupTraceList[dataSource.value.groupTraceList.length - 1].status;
+			groupTraceMap.value = Object.fromEntries(dataSource.value.groupTraceList.map(({ status, ctime }: any) => [status, ctime]));
 		});
 	}
 });

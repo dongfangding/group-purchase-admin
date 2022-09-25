@@ -2,15 +2,13 @@
 	<div>
 		<div :class="Classes['div-box']">
 			<div :style="{ 'font-size': '18px', 'margin-left': '20px', color: 'black' }">
-				<el-steps :active="groupStatusSteps == 5 ? 2 : groupStatusSteps" align-center v-if="groupStatusSteps == 5">
-					<el-step title="已创建" :description="dayjs(groupTraceMap[1] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
-					<el-step title="已取消" :description="dayjs(groupTraceMap[5] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
-				</el-steps>
-				<el-steps :active="groupStatusSteps" align-center v-if="groupStatusSteps != 5">
-					<el-step title="已创建" :description="dayjs(groupTraceMap[1] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
-					<el-step title="已成团" :description="dayjs(groupTraceMap[2] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
-					<el-step title="已到货" :description="dayjs(groupTraceMap[3] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
-					<el-step title="已完成" :description="dayjs(groupTraceMap[4] * 1000).format('YYYY/MM/DD HH:mm:ss')" />
+				<el-steps :active="dataSource.trace.currentStep">
+					<el-step
+						v-for="item in dataSource.trace.traces"
+						:title="item.statusName"
+						:description="item.ctime ? dayjs(item.ctime * 1000).format('YYYY-MM-DD HH:mm:ss') : ''"
+						:key="item.statusName"
+					/>
 				</el-steps>
 			</div>
 		</div>
@@ -129,20 +127,20 @@ import dayjs from "dayjs";
 
 const dataSource = ref<any>({});
 // 团购状态字典
-const groupTraceMap = ref();
-const groupStatusSteps = ref(0);
+// const groupTraceMap = ref<any>();
+// const groupStatusSteps = ref(0);
 
 const route = useRoute();
 const loading = ref(false);
 
-onMounted(async () => {
+onMounted(() => {
 	const joinItemId = route.params.joinItemId;
 	if (joinItemId) {
 		loading.value = true;
-		await orderDetail(joinItemId).then((res: any) => {
+		orderDetail(joinItemId).then((res: any) => {
 			dataSource.value = res.data;
-			groupStatusSteps.value = dataSource.value.groupTraceList[dataSource.value.groupTraceList.length - 1].status;
-			groupTraceMap.value = Object.fromEntries(dataSource.value.groupTraceList.map(({ status, ctime }: any) => [status, ctime]));
+			// groupStatusSteps.value = dataSource.value.groupTraceList[dataSource.value.groupTraceList.length - 1].status;
+			// groupTraceMap.value = Object.fromEntries(dataSource.value.groupTraceList.map(({ status, ctime }: any) => [status, ctime]));
 		});
 	}
 });

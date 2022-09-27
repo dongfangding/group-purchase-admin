@@ -2,12 +2,12 @@
 	<div>
 		<div :class="Classes['div-box']">
 			<div :style="{ 'font-size': '18px', 'margin-left': '20px', color: 'black' }">
-				<el-steps :active="dataSource.trace.currentStep">
+				<el-steps :active="dataSource.trace && dataSource.trace.currentStep" :space="150">
 					<el-step
-						v-for="item in dataSource.trace.traces"
+						v-for="item in dataSource.trace ? dataSource.trace.traces : []"
 						:title="item.statusName"
 						:description="item.ctime ? dayjs(item.ctime * 1000).format('YYYY-MM-DD HH:mm:ss') : ''"
-						:key="item.statusName"
+						:key="item.status"
 					/>
 				</el-steps>
 			</div>

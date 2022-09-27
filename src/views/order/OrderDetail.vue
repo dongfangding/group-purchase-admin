@@ -92,9 +92,9 @@
 			<el-divider />
 			<div :class="Classes['order-box-row']">
 				<div :class="Classes['order-box-label']">下单人:</div>
-				<el-image :class="Classes['join-pic-image']" fit="fill" :src="dataSource.groupMasterAvatarUrl || ''"></el-image>
+				<el-image :class="Classes['join-pic-image']" fit="fill" :src="personInfoForm.avatarUrl || ''"></el-image>
 				<div :class="Classes['order-box-content']">
-					{{ dataSource.groupMasterNickname }}
+					{{ personInfoForm.nickname }}
 				</div>
 			</div>
 			<div :class="Classes['order-box-row']">
@@ -120,10 +120,16 @@
 </template>
 
 <script setup lang="ts" name="UserDrawer">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, toRef } from "vue";
 import { useRoute } from "vue-router";
 import { orderDetail } from "@/api/modules/master";
 import dayjs from "dayjs";
+import { GlobalStore } from "@/store";
+
+const globalStore = GlobalStore();
+
+// 用户表单数据
+let personInfoForm = toRef(globalStore, "userInfo");
 
 const dataSource = ref<any>({});
 // 团购状态字典

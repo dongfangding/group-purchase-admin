@@ -10,7 +10,7 @@
 			style="max-width: 460px"
 		>
 			<el-form-item prop="mobile" label="手机号">
-				<el-input v-model="passwordForm.mobile"> </el-input>
+				<el-input disabled v-model="passwordForm.mobile"> </el-input>
 			</el-form-item>
 			<div :style="{ display: 'flex' }">
 				<el-form-item prop="verifyCode" label="验证码" :style="{ width: '55%', flex: 1 }">
@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, toRef } from "vue";
 import { Common } from "@/api/interface";
 import { UserFilled } from "@element-plus/icons-vue";
 import type { ElForm } from "element-plus";
@@ -63,12 +63,17 @@ import { sendSmsCode } from "@/api/modules/login";
 import { modifyPassword } from "@/api/modules/user";
 import { useRouter } from "vue-router";
 import Verify from "@/components/verifition/Verify.vue";
+import { GlobalStore } from "@/store";
 
 const router = useRouter();
 const loading = ref<boolean>(false);
 const labelPosition = ref("right");
 type FormInstance = InstanceType<typeof ElForm>;
 const passwordFormRef = ref<FormInstance>();
+const globalStore = GlobalStore();
+
+// 用户表单数据
+let personInfoForm = toRef(globalStore, "userInfo");
 const formRules = reactive({
 	mobile: [{ required: true, message: "请输入手机号", trigger: "blur" }],
 	verifyCode: [{ required: true, message: "请输入验证码", trigger: "blur" }],
@@ -77,7 +82,7 @@ const formRules = reactive({
 });
 // // 修改密码表单数据
 const passwordForm = reactive<any>({
-	mobile: "",
+	mobile: personInfoForm.value.mobile,
 	verifyCode: "",
 	password: "",
 	ensurePassword: ""

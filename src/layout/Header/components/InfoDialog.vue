@@ -11,8 +11,8 @@
 					<el-input v-model="personInfoForm.nickname"> </el-input>
 				</el-form-item>
 				<el-form-item prop="email" label="邮箱">
-					<el-input v-if="personInfoForm.emailVerified && personInfoForm.email" v-model="personInfoForm.email"> </el-input>
-					<el-row v-if="!personInfoForm.emailVerified && personInfoForm.email">
+					<el-input v-if="personInfoForm.emailVerified" v-model="personInfoForm.email"> </el-input>
+					<el-row v-if="!personInfoForm.emailVerified">
 						<el-col :span="50"><el-input v-model="personInfoForm.email"> </el-input></el-col>
 						<el-col :span="10" :style="{ 'margin-left': '5px' }"
 							><el-button @click.prevent="sendEmailVerifyFn" class="email_verify_status"

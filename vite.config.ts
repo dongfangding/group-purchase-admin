@@ -13,6 +13,7 @@ import importToCDN from "vite-plugin-cdn-import";
 // import AutoImport from "unplugin-auto-import/vite";
 // import Components from "unplugin-vue-components/vite";
 // import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import requireTransform from "vite-plugin-require-transform";
 
 // @see: https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
@@ -97,6 +98,10 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 					// 	css: "https://unpkg.com/element-plus/dist/index.css"
 					// }
 				]
+			}),
+			requireTransform({
+				fileRegex: /.ts$|.tsx$|.vue$/
+				//   fileRegex:/.js$|.jsx$|.vue$/
 			})
 			// * demand import element
 			// AutoImport({

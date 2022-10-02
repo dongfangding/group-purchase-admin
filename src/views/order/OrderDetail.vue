@@ -125,6 +125,13 @@ import { useRoute } from "vue-router";
 import { orderDetail } from "@/api/modules/master";
 import dayjs from "dayjs";
 import { GlobalStore } from "@/store";
+import useMqtt from "@/utils/useMqtt";
+const { startMqtt } = useMqtt();
+
+startMqtt("/#", (topic, message) => {
+	const msg = JSON.parse(message.toString());
+	console.log(msg);
+});
 
 const globalStore = GlobalStore();
 

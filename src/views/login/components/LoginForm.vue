@@ -65,7 +65,6 @@ import { personalInfo } from "@/api/modules/user";
 //引入组件
 import Verify from "@/components/verifition/Verify.vue";
 // import md5 from "js-md5";
-
 const globalStore = GlobalStore();
 const menuStore = MenuStore();
 const tabStore = TabsStore();
@@ -142,9 +141,6 @@ const getAuthCode = async () => {
 		return;
 	}
 	openVerify();
-	// await createFromWxJieLong({ text: ref(wxText).value });
-	// importDialogVisible.value = false;
-	// proTable.value.refresh();
 };
 
 // login
@@ -167,14 +163,6 @@ const login = (formEl: FormInstance | undefined) => {
 				// * 登录成功之后清除上个账号的 menulist 和 tabs 数据
 				menuStore.setMenuList([]);
 				tabStore.closeMultipleTab();
-				// personalInfo()
-				// 	.then(res1 => {
-				// 		console.log(res1.data);
-				// 		globalStore.setUserInfo(res1.data || {});
-				// 	})
-				// 	.catch(error => {
-				// 		console.log("error", error);
-				// 	});
 			});
 			const res = await personalInfo();
 			globalStore.setUserInfo(res.data || {});

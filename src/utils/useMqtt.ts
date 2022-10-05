@@ -1,33 +1,28 @@
 import MQTT from "@/utils/mqtt";
-import { ref, onUnmounted } from "vue";
 import type { OnMessageCallback } from "mqtt";
 import { getConnectionInfo } from "@/api/modules/chat";
 
+const globalMqttClient = new MQTT("ws://106.15.10.135:8809/mqtt");
+// 初始化mqtt
+globalMqttClient.init();
+console.log("初始化mqtt....");
+await getConnectionInfo();
 export default function useMqtt() {
-	const PublicMqtt = ref<MQTT | null>(null);
-	getConnectionInfo();
-	const startMqtt = (topic: string, callback: OnMessageCallback) => {
-		// 设置订阅地址
-		PublicMqtt.value = new MQTT(topic);
-		// 初始化mqtt
-		PublicMqtt.value.init();
-		// 链接mqtt
-		PublicMqtt.value.link();
+	const subscribe = (topic: string, callback: OnMessageCallback) => {
+		globalMqttClient.subscribe(topic, 0);
 		getMessage(callback);
 	};
 	const getMessage = (callback: OnMessageCallback) => {
 		// PublicMqtt.value?.client.on('message', callback);
-		PublicMqtt.value?.get(callback);
+		globalMqttClient?.get(callback);
 	};
-	onUnmounted(() => {
-		// 页面销毁结束订阅
-		if (PublicMqtt.value) {
-			PublicMqtt.value.unsubscribes();
-			PublicMqtt.value.over();
-		}
-	});
+
+	const unsubscribe = (topic: string) => {
+		globalMqttClient?.unsubscribe(topic);
+	};
 
 	return {
-		startMqtt
+		subscribe,
+		unsubscribe
 	};
 }

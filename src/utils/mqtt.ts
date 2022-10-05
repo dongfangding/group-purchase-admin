@@ -5,12 +5,11 @@ const globalStore = GlobalStore();
 
 class MQTT {
 	url: string; // mqtt地址
-	topic: string; //订阅地址
 	client!: MqttClient;
-	constructor(topic: string) {
-		this.topic = topic;
+	constructor(url: string) {
 		// 虽然是mqtt但是在客户端这里必须采用websock的链接方式
-		this.url = "ws://106.15.10.135:8809/mqtt";
+		// this.url = "ws://106.15.10.135:8809/mqtt";
+		this.url = url;
 	}
 
 	//初始化mqtt
@@ -19,43 +18,61 @@ class MQTT {
 			clean: true,
 			reconnectPeriod: 1000,
 			clientId: globalStore.userInfo.id + "-" + globalStore.userInfo.nickname,
-			username: globalStore.userInfo.id,
-			password: globalStore.token,
+			// username: globalStore.userInfo.id,
+			// password: 111,
 			connectTimeout: 4000 // 超时时间
 		};
 		this.client = mqtt.connect(this.url, options);
 		this.client.on("error", (error: any) => {
-			console.log(error);
+			console.log("mqtt错误事件...", error);
 		});
 		this.client.on("reconnect", (error: Error) => {
-			console.log(error);
-		});
-	}
-	//取消订阅
-	unsubscribes() {
-		this.client.unsubscribe(this.topic, (error: Error) => {
 			if (!error) {
-				console.log(this.topic, "取消订阅成功");
+				console.log("mqtt重连成功....");
 			} else {
-				console.log(this.topic, "取消订阅失败");
+				console.log("mqtt重连失败....");
 			}
 		});
+		this.client.on("connect", packet => {
+			console.log("mqtt连接成功....", packet);
+		});
 	}
-	//连接
-	link() {
-		this.client.on("connect", () => {
-			this.client.subscribe(this.topic, (error: any) => {
-				if (!error) {
-					console.log("订阅成功");
-				} else {
-					console.log("订阅失败");
-				}
-			});
+	/**
+	 * 是否已连接到服务器
+	 */
+	isConnected() {
+		return this.client && this.client.connected == true;
+	}
+
+	/**
+	 * 订阅主题
+	 */
+	subscribe(topic: string, qos: 0 | 1 | 2) {
+		// if (this.isConnected()) {
+		this.client.subscribe(topic, { qos: qos });
+		console.log("mqtt订阅成功,topic = ", topic);
+		// }
+	}
+
+	//取消订阅
+	unsubscribe(topic: string) {
+		this.client.unsubscribe(topic, (error: Error) => {
+			if (!error) {
+				console.log("取消订阅成功, topic = ", topic);
+			} else {
+				console.log("取消订阅失败, topic = ", topic, error);
+			}
 		});
 	}
 	//收到的消息
 	get(callback: OnMessageCallback) {
 		this.client.on("message", callback);
+	}
+	/**
+	 * 推送数据
+	 */
+	publish(topic: string, message: string, qos: 0 | 1 | 2) {
+		this.client.publish(topic, message, { qos: qos, retain: false });
 	}
 	//结束链接
 	over() {

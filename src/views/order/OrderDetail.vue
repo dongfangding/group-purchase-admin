@@ -120,15 +120,15 @@
 </template>
 
 <script setup lang="ts" name="UserDrawer">
-import { ref, onMounted, toRef } from "vue";
+import { ref, onMounted, toRef, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { orderDetail } from "@/api/modules/master";
 import dayjs from "dayjs";
 import { GlobalStore } from "@/store";
 import useMqtt from "@/utils/useMqtt";
-const { startMqtt } = useMqtt();
+const { subscribe, unsubscribe } = useMqtt();
 
-startMqtt("/#", (topic, message) => {
+subscribe("/#", (topic, message) => {
 	const msg = JSON.parse(message.toString());
 	console.log(msg);
 });
@@ -156,6 +156,11 @@ onMounted(() => {
 			// groupTraceMap.value = Object.fromEntries(dataSource.value.groupTraceList.map(({ status, ctime }: any) => [status, ctime]));
 		});
 	}
+});
+
+onUnmounted(() => {
+	// 页面销毁结束订阅
+	unsubscribe("/#");
 });
 </script>
 <style module="Classes">

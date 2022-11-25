@@ -35,19 +35,24 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { requestGroupDetail } from "@/api/modules/master";
+import { GlobalStore } from "@/store";
 import dayjs from "dayjs";
 
 const dataSource = ref<any>({});
+const globalStore = GlobalStore();
 
 const route = useRoute();
 const loading = ref(false);
 
 onMounted(() => {
 	const groupId = route.params.gid;
+
 	if (groupId) {
 		loading.value = true;
 		requestGroupDetail({ groupId }).then((res: any) => {
 			dataSource.value = res.data;
+			if (globalStore.userInfo.id == dataSource.value.groupMasterUid) {
+			}
 		});
 	}
 });

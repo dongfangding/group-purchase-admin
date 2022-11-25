@@ -38,6 +38,7 @@
 			<el-table-column prop="joinUserName" label="昵称" />
 			<el-table-column prop="goodNum" label="购买数量" width="180" />
 			<el-table-column prop="formatJoinTime" label="跟团时间" />
+			<el-table-column :formatter="formatJoinItemAddress" prop="formatJoinTime" label="收货地址" v-if="addressVisible" />
 		</el-table>
 		<div>
 			<el-affix :offset="50" :style="{ float: 'right' }" position="bottom">
@@ -51,9 +52,13 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { requestGroupDetail } from "@/api/modules/master";
+import { GlobalStore } from "@/store";
 import dayjs from "dayjs";
 
 const dataSource = ref<any>({});
+const globalStore = GlobalStore();
+
+const addressVisible = ref(false);
 
 const route = useRoute();
 const loading = ref(false);
@@ -64,8 +69,29 @@ onMounted(() => {
 		loading.value = true;
 		requestGroupDetail({ groupId }).then((res: any) => {
 			dataSource.value = res.data;
+			if (globalStore.userInfo.id == dataSource.value.groupMasterUid) {
+				addressVisible.value = true;
+			}
 		});
 	}
 });
+// 渲染收货地址
+const formatJoinItemAddress = (row: any) => {
+	return (
+		row.receiverProvince ||
+		"" +
+			(row.receiverCity || "") +
+			(row.receiverArea || "") +
+			(row.receiverDetailAddress || "") +
+			"\r\n" +
+			(row.receiverName || "") +
+			"-" +
+			(row.receiverMobile || "") +
+			"\r\n" +
+			(row.receiverBuildingNo || "") +
+			"号" +
+			(row.receiverRoomNo || "")
+	);
+};
 </script>
 <style scoped></style>

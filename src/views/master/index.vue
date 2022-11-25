@@ -47,7 +47,7 @@
 					<el-button type="primary" :icon="CirclePlus" link @click="$router.push({ name: 'Edit', params: { gid: 0 } })"
 						>创建团购</el-button
 					>
-					<el-button type="primary" :icon="DocumentCopy" @click="importDialogVisible = true">导入微信接龙文案</el-button>
+					<!-- <el-button type="primary" :icon="DocumentCopy" @click="importDialogVisible = true">导入微信接龙文案</el-button> -->
 					<el-button
 						type="danger"
 						:icon="Delete"
@@ -90,7 +90,7 @@ import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/components/ImportExcel/index.vue";
-import { CirclePlus, Delete, DocumentCopy } from "@element-plus/icons-vue";
+import { CirclePlus, Delete } from "@element-plus/icons-vue";
 import { deleteUser, listDict } from "@/api/modules/user";
 import { ElMessage, ElMessageBox } from "element-plus";
 

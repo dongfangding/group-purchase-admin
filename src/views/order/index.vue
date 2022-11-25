@@ -42,6 +42,8 @@ const fillDefaultAddress = () => {
 	currentRecord.value.receiverName = userDefaultAddress.value.receiverName || "";
 	currentRecord.value.receiverDetailAddress = userDefaultAddress.value.detailAddress || "";
 	currentRecord.value.receiverMobile = userDefaultAddress.value.mobile || "";
+	currentRecord.value.receiverBuildingNo = userDefaultAddress.value.buildingNo || "";
+	currentRecord.value.receiverRoomNo = userDefaultAddress.value.roomNo || "";
 };
 
 // 支付
@@ -67,7 +69,9 @@ const handleSelectAddress = val => {
 		...formData.value,
 		receiverDetailAddress: val.detailAddress,
 		receiverMobile: val.mobile,
-		receiverName: val.receiverName
+		receiverName: val.receiverName,
+		receiverBuildingNo: val.buildingNo,
+		receiverRoomNo: val.roomNo
 	};
 };
 

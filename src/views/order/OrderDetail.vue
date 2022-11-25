@@ -34,11 +34,15 @@
 			</div>
 			<div :class="Classes['row-div']">
 				<div :class="Classes['row-div-empty']"></div>
-				<div :class="Classes['row-div-content']"><span>楼号(如20): </span></div>
+				<div :class="Classes['row-div-content']">
+					<span>楼号(如20): {{ dataSource.receiverBuildingNo || "" }}</span>
+				</div>
 			</div>
 			<div :class="Classes['row-div']">
 				<div :class="Classes['row-div-empty']"></div>
-				<div :class="Classes['row-div-content']"><span>房号(如901): </span></div>
+				<div :class="Classes['row-div-content']">
+					<span>房号(如901): {{ dataSource.receiverRoomNo || "" }}</span>
+				</div>
 			</div>
 			<div :class="Classes['row-div']">
 				<div :class="Classes['row-div-empty']">

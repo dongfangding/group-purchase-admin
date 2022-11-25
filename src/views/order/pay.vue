@@ -19,7 +19,9 @@ const payRequest = {
 	receiverDetailAddress: "收货人详细地址",
 	receiverProvince: "收货人所在区",
 	receiverCity: "收货人所在城市",
-	receiverArea: "收货人所在区/镇"
+	receiverArea: "收货人所在区/镇",
+	receiverBuildingNo: "收货人楼栋号",
+	receiverRoomNo: "收货人房间号"
 };
 
 // 支付

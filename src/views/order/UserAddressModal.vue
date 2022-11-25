@@ -1,5 +1,5 @@
 <template>
-	<el-dialog :modelValue="visible" @update:model-value="$emit('update:visible', $event)" :width="600" title="选择地址">
+	<el-dialog :modelValue="visible" @update:model-value="$emit('update:visible', $event)" :width="800" title="选择地址">
 		<div>
 			<div :style="{ 'margin-bottom': '8px' }">
 				<el-button type="primary" @click="openDialog('新增地址')" plain>新增地址</el-button>
@@ -9,6 +9,8 @@
 				<el-table-column type="index" width="50" />
 				<el-table-column prop="receiverName" label="收件人" width="100" />
 				<el-table-column prop="mobile" label="联系方式" width="150" />
+				<el-table-column prop="buildingNo" label="楼栋号" width="100" />
+				<el-table-column prop="roomNo" label="房间号" width="100" />
 				<el-table-column prop="detailAddress" label="详细地址" width="260" />
 			</el-table>
 
@@ -27,6 +29,12 @@
 						</el-form-item>
 						<el-form-item prop="mobile" label="联系方式">
 							<el-input v-model="addressForm.mobile"> </el-input>
+						</el-form-item>
+						<el-form-item prop="buildingNo" label="楼栋号">
+							<el-input v-model="addressForm.buildingNo"> </el-input>
+						</el-form-item>
+						<el-form-item prop="roomNo" label="房间号">
+							<el-input v-model="addressForm.roomNo"> </el-input>
 						</el-form-item>
 						<el-form-item prop="detailAddress" label="详细地址">
 							<el-input type="textarea" :autosize="{ minRows: 3, maxRows: 4 }" v-model="addressForm.detailAddress"> </el-input>

@@ -18,7 +18,6 @@
 					:disabled="drawerData.isView"
 					:file-size="5"
 					:upload-style="{ width: '120px', height: '120px' }"
-					@check-validate="checkValidate('wxIdCardUrl')"
 				>
 					<template #tip> 大小不能超过 5M </template>
 				</UploadImg>
@@ -112,14 +111,7 @@ const router = useRouter();
 const dialogVisible = ref(false);
 const groupId = ref();
 
-const rules = reactive({
-	avatar: [{ required: true, message: "请上传用户头像", trigger: "change" }],
-	username: [{ required: true, message: "请填写用户姓名", trigger: "change" }],
-	gender: [{ required: true, message: "请选择性别", trigger: "change" }],
-	idCard: [{ required: true, message: "请填写身份证号", trigger: "change" }],
-	email: [{ required: true, message: "请填写邮箱", trigger: "change" }],
-	address: [{ required: true, message: "请填写居住地址", trigger: "change" }]
-});
+const rules = reactive({});
 
 interface GroupDrawerProps {
 	title: string;
